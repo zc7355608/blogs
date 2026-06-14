@@ -211,3 +211,302 @@
 
 > 注意：Flutter 的Release 包默认是使用 Dart AOT 模式编译的，所以不支持动态化，但 Dart 还有 JIT 或  snapshot 运行方式，这些模式都是支持动态化的。
 
+### React Native 入门
+
+React Native 是一个使用 React 和应用平台的原生功能来构建 Android 和 iOS 应用的开源框架。通过 React Native，您可以使用 JavaScript 来访问移动平台的  API，以及使用 React 组件来描述 UI 的外观和行为：一系列可重用、可嵌套的代码。
+
+接下来我们介绍一下组件在 React Native 中是如何工作的。
+
+在 Android 和 iOS 开发中，一个**视图**是 UI 的基本组成部分：屏幕上的一个小矩形元素、可用于显示文本、图像或响应用户输入。甚至应用程序最小的视觉元素（例如一行文本或一个按钮）也都是各种视图。某些类型的视图可以包含其他视图。全部都是视图。
+
+在 Android 开发中是使用 Kotlin 或 Java 来编写视图；在 iOS 开发中是使用 Swift 或 Objective-C 来编写视图。在 React Native 中，则使用 React 组件通过 JavaScript 来调用这些视图。在运行时，React  Native 为这些组件创建相应的 Android 和 iOS 视图。由于 **React Native 组件就是对原生视图的封装**，因此使用  React Native 编写的应用外观、感觉和性能与其他任何原生应用一样。我们将这些平台支持的组件称为**原生组件**。
+
+> React Native 允许您为 Android 和 iOS 构建自己的 Native Components（原生组件），以满足您开发应用程序的独特需求。
+
+React Native 包括一组基础的、随时可用的原生组件，您可以使用它们来构建您的应用程序。它们是 React Native 的**核心组件**。
+
+React Native 具有许多核心组件，从表单控件到活动指示器，应有尽有。例如：
+
+| React Native UI 组件 | Android 原生视图 | iOS 原生视图     | Web 标签                | 说明                                                         |
+| -------------------- | ---------------- | ---------------- | ----------------------- | ------------------------------------------------------------ |
+| `<View>`             | `<ViewGroup>`    | `<UIView>`       | A non-scrolling `<div>` | 一个支持使用flexbox布局、样式、一些触摸处理和无障碍性控件的容器 |
+| `<Text>`             | `<TextView>`     | `<UITextView>`   | `<p>`                   | 显示、样式和嵌套文本字符串，甚至处理触摸事件                 |
+| `<Image>`            | `<ImageView>`    | `<UIImageView>`  | `<img>`                 | 显示不同类型的图片                                           |
+| `<ScrollView>`       | `<ScrollView>`   | `<UIScrollView>` | `<div>`                 | 一个通用的滚动容器，可以包含多个组件和视图                   |
+| `<TextInput>`        | `<EditText>`     | `<UITextField>`  | `<input type="text">`   | 使用户可以输入文本                                           |
+
+另外有些内置组件的某些属性可能只在特定平台上有效。请在阅读文档时留意。
+
+> HelloWorld 程序：
+>
+> ```jsx
+> import React from 'react';
+> import { View, Text, Image, ScrollView, TextInput } from 'react-native';
+> 
+> const App = () => {
+>   return (
+>     <ScrollView>
+>       <Text>Some text</Text>
+>       <View>
+>         <Text>Some more text</Text>
+>         <Image
+>           source={{
+>             uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
+>           }}
+>           style={{ width: 200, height: 200 }}
+>         />
+>       </View>
+>       <TextInput
+>         style={{
+>           height: 40,
+>           borderColor: 'gray',
+>           borderWidth: 1
+>         }}
+>         defaultValue="You can type in me"
+>       />
+>     </ScrollView>
+>   );
+> }
+> 
+> export default App;
+> ```
+
+如果你熟悉 web 开发，`<View>`和`<Text>`应该能让你想起 HTML。你可以把它们看作是应用开发中的`<div>`和`<p>`标签。
+
+- `<TextInput>`：`TextInput`是一个允许用户输入文本的**基础组件**。它有一个`onChangeText`属性，此属性接受一个函数，并会在文本每次发生变化时调用。它还有一个`onSubmitEditing`属性，此属性接受一个函数，并会在文本被提交时调用。
+
+- `<ScrollView>`：`ScrollView`是一个通用的可滚动的容器，你可以在其中放入多个组件和视图，而且这些组件并不需要是同类型的。ScrollView 不仅可以垂直滚动，还能水平滚动（通过`horizontal`属性来设置）。
+
+  ScrollViews 可以通过使用`pagingEnabled`属性来允许使用滑动手势对视图进行分页，在 Android 上也可以利用[ViewPager](https://github.com/react-native-community/react-native-viewpager)组件水平滑动视图。
+
+  在 iOS 上包含单个子元素的 ScrollViews 可以允许用户对内容进行缩放. 通过设置`maximumZoomScale`和`minimumZoomScale`两者的属性, 您的用户能够利用捏合以及扩大手势来放大或缩小。
+
+  `ScrollView`适合用来显示数量不多的滚动元素。放置在`ScrollView`中的所有组件都会被渲染，哪怕有些组件因为内容太长被挤出了屏幕外。如果你需要显示较长的滚动列表，那么应该使用功能差不多但**性能更好的`FlatList`组件**。下面我们来看看[如何使用长列表](https://reactnative.cn/docs/using-a-listview)。
+
+React Native 提供了几个适用于展示长列表数据的组件，一般而言我们会选用`<FlatList>`或`<SectionList>`。
+
+- `<FlatList>`：用于显示一个垂直的滚动列表，其中的元素之间结构近似而仅数据不同。
+
+  `FlatList`更适于长列表数据，且元素个数可以增删。和[`ScrollView`](https://reactnative.cn/docs/using-a-scrollview)不同的是，`FlatList`并不立即渲染所有元素，而是优先渲染屏幕上可见的元素。
+
+  `FlatList`组件必须的两个属性是`data`和`renderItem`。`data`是列表的数据源，而`renderItem`则从数据源中逐个解析数据，然后返回一个设定好格式的组件来渲染。
+
+  下面的例子创建了一个简单的`FlatList`，并预设了一些模拟数据。首先是初始化`FlatList`所需的`data`，其中的每一项（行）数据之后都在`renderItem`中被渲染成了`Text`组件，最后构成整个`FlatList`。
+
+  ```jsx
+  import React from 'react';
+  import { FlatList, StyleSheet, Text, View } from 'react-native';
+  
+  const styles = StyleSheet.create({
+    container: {
+     flex: 1,
+     paddingTop: 22
+    },
+    item: {
+      padding: 10,
+      fontSize: 18,
+      height: 44,
+    },
+  });
+  
+  const FlatListBasics = () => {
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={[
+            {key: 'Devin'},
+            {key: 'Dan'},
+            {key: 'Dominic'},
+            {key: 'Jackson'},
+            {key: 'James'},
+            {key: 'Joel'},
+            {key: 'John'},
+            {key: 'Jillian'},
+            {key: 'Jimmy'},
+            {key: 'Julie'},
+          ]}
+          renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
+        />
+      </View>
+    );
+  }
+  
+  export default FlatListBasics;
+  ```
+
+- `<SectionList>`：如果要渲染的是一组需要分组的数据，也许还带有分组标签的，那么`SectionList`将是个不错的选择。
+
+  ```jsx
+  import React from 'react';
+  import { SectionList, StyleSheet, Text, View } from 'react-native';
+  
+  const styles = StyleSheet.create({
+    container: {
+     flex: 1,
+     paddingTop: 22
+    },
+    sectionHeader: {
+      paddingTop: 2,
+      paddingLeft: 10,
+      paddingRight: 10,
+      paddingBottom: 2,
+      fontSize: 14,
+      fontWeight: 'bold',
+      backgroundColor: 'rgba(247,247,247,1.0)',
+    },
+    item: {
+      padding: 10,
+      fontSize: 18,
+      height: 44,
+    },
+  })
+  
+  const SectionListBasics = () => {
+      return (
+        <View style={styles.container}>
+          <SectionList
+            sections={[
+              {title: 'D', data: ['Devin', 'Dan', 'Dominic']},
+              {title: 'J', data: ['Jackson', 'James', 'Jillian', 'Jimmy', 'Joel', 'John', 'Julie']},
+            ]}
+            renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
+            renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title}</Text>}
+            keyExtractor={(item, index) => index}
+          />
+        </View>
+      );
+  }
+  
+  export default SectionListBasics;
+  ```
+
+### 特定平台编码
+
+在编写跨平台的应用时，我们肯定希望尽可能多地复用代码。但是总有些时候我们会碰到针对不同平台编写不同代码的需求。
+
+React Native 提供了两种方法来区分平台：
+
+- #### `Platform`模块：
+
+  它是 React Native 提供的一个，用于检测当前运行平台的模块。如果**组件只有一小部分代码需要依据平台定制**，那么这个模块就可以派上用场。
+
+  ```jsx
+  import {Platform, StyleSheet} from 'react-native';
+  
+  const styles = StyleSheet.create({
+    height: Platform.OS === 'ios' ? 200 : 100,
+  });
+  ```
+
+  `Platform.OS`在 iOS 上会返回`ios`，而在 Android 设备或模拟器上则会返回`android`。
+
+  还有个实用的方法是 `Platform.select()`，它可以以 `Platform.OS` 为 key，从传入的对象中返回对应平台的值：
+
+  ```jsx
+  import {Platform, StyleSheet} from 'react-native';
+  
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      ...Platform.select({
+        ios: {
+          backgroundColor: 'red',
+        },
+        android: {
+          backgroundColor: 'green',
+        },
+        default: {
+          // other platforms, web for example
+          backgroundColor: 'blue',
+        },
+      }),
+    },
+  });
+  ```
+
+  上面的代码会根据平台的不同返回不同的 container 样式 —— iOS 上背景色为红色，android 为绿色，其他平台（如 web）为蓝色。
+
+  这一方法可以接受任何合法类型的参数，因此你也可以直接用它针对不同平台返回不同的组件，像下面这样：
+
+  ```jsx
+  const Component = Platform.select({
+    ios: () => require('ComponentIOS'),
+    android: () => require('ComponentAndroid'),
+  })();
+  
+  <Component />;
+  
+  // 又或者：
+  
+  const Component = Platform.select({
+    native: () => require('ComponentForNative'),
+    default: () => require('ComponentForWeb'),
+  })();
+  
+  <Component />;
+  ```
+
+  ##### 通过 `Platform.Version` 属性，可以检测系统的版本：
+
+  在 Android 上，`Version`属性是一个数字，表示 Android 的 api level：
+
+  ```jsx
+  import {Platform} from 'react-native';
+  
+  if (Platform.Version === 25) {
+    console.log('Running on Nougat!');
+  }
+  ```
+
+  在 iOS 上，`Version`属性是`-[UIDevice systemVersion]`的返回值，具体形式为一个表示当前系统版本的字符串。比如可能是"10.3"。
+
+  ```jsx
+  import {Platform} from 'react-native';
+  
+  const majorVersionIOS = parseInt(Platform.Version, 10);
+  if (majorVersionIOS <= 9) {
+    console.log('Work around a change in behavior');
+  }
+  ```
+
+- #### 特定平台后缀
+
+  当不同平台的代码逻辑较为复杂时，最好是放到不同的文件里，这时候我们可以使用特定平台后缀。React Native 会检测某个文件是否具有`.ios.`或是`.android.`的后缀，然后根据当前运行的平台自动加载正确对应的文件。
+
+  比如你可以在项目中创建下面这样的组件：
+
+  ```tex
+  BigButton.ios.js
+  
+  BigButton.android.js
+  ```
+
+  然后去掉平台后缀直接引用：
+
+  ```jsx
+  import BigButton from './BigButton';
+  ```
+
+  React Native 会根据运行平台的不同自动引入正确对应的组件。
+
+  如果你还希望在 web 端复用 React Native 的代码，那么还可以使用`.native.js`的后缀。此时 iOS 和 Android 会使用`BigButton.native.js`文件，而 web 端会使用`BigButton.js`。（注意目前官方并没有直接提供 web 端的支持，请在社区搜索第三方方案）。
+
+  比如在你的项目中存在如下的两个文件：
+
+  ```sh
+  Container.js # 由 Webpack, Rollup 或者其他打包工具打包的文件
+  
+  Container.native.js # 由 React Native 自带打包工具(Metro) 为ios和android 打包的文件
+  ```
+
+  在引用时并不需要添加`.native.`后缀：
+
+  ```jsx
+  import Container from './Container';
+  ```
+
+  **提示:** 为避免在构建后的 Web 生产环境的代码中出现多余代码，要记得在你的 Web 打包工具中**配置忽略`.native.js`结尾的文件**, 这样可以**减少打包后文件的大小**。
+
+### 搭建开发环境
+
+你可以选择将 React Native 无缝集成到你已有的 Android 或 iOS 应用中，也可以完全使用 React Native 重写一个新的应用。
