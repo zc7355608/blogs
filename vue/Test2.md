@@ -18,7 +18,7 @@
 
      - 那么没有了`el`配置项，那么组件的结构（Vue模版）就只能通过`template`配置项来写了：
 
-       ```js
+       ```vue
       const school = Vue.extend({
            template: `
                <div>
