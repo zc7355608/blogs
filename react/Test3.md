@@ -259,7 +259,7 @@
 - ### `lazy(load)`
 
   默认情况下，用户第一次请求`index.html`时，会将 React 应用中用到的所有组件资源，通过网络全部都加载回来。这种方式的缺点是：页面上有很多路由组件，我还没点呢，且有可能一直不用，就没有必要初始化时随着整个应用被加载进来。此时可以给组件设置懒加载。
-  
+
   `lazy` 能够让你在组件第一次被渲染之前延迟加载组件的代码。通过在组件外部调用 `lazy()`，以声明一个懒加载的 React 组件（Lazy组件）：
 
   ```js
@@ -267,9 +267,9 @@
   
   const MarkdownPreview = lazy(() => import('./MarkdownPreview.js'));
   ```
-  
+
   ##### 参数：
-  
+
   - `load`: 一个返回 [Promise](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise) 或另一个 **thenable**（具有 `then` 方法的类 Promise 对象）的函数。React 不会在你尝试首次渲染返回的组件之前调用 `load` 函数。在 React 首次调用 `load` 后，它将等待其解析，然后将解析值的 `.default` 渲染为 React 组件。返回的 Promise 和 Promise 的解析值都将被缓存，因此 React 不会多次调用 `load` 函数。如果 Promise 被拒绝，则 React 将抛出拒绝原因给最近的**错误边界**处理。
 
     > 关于 `load()` 函数：
@@ -281,13 +281,13 @@
     > ###### 返回值：
     >
     > 你需要返回一个 [Promise](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise) 或其他 **thenable**（具有 `then` 方法的类 Promise 对象）。它最终需要解析为有效的 React 组件类型，例如函数、[`memo`](https://zh-hans.react.dev/reference/react/memo) 或 [`forwardRef`](https://zh-hans.react.dev/reference/react/forwardRef) 组件。
-  
+
   ##### 返回值：
-  
+
   `lazy` 返回一个 React 组件，你可以在 fiber 树中渲染。当懒加载组件的代码仍在加载时，尝试渲染它将会处于 *暂停* 状态。可以配合使用 `<Suspense>` 组件在其加载时显示一个正在加载的提示。
-  
+
   ##### 使用 Suspense 实现懒加载组件：
-  
+
   ```jsx
   <Suspense fallback={<Loading />}>
     <!-- 等内部的所有懒加载组件都加载完毕后，再展示内部的所有内容 -->
@@ -295,15 +295,15 @@
     <MarkdownPreview />
   </Suspense>
   ```
-  
+
   Suspense 会等内部的所有懒加载组件都加载完毕后，再展示内部的所有内容。因此在上方代码中，`MarkdownPreview` 组件只有在你尝试渲染它时才会被加载。如果 `MarkdownPreview` 还没有加载完成，将显示 `<Loading>` 组件。
-  
+
   > 注意：`fallback`指定的组件不要懒加载。
 
 - ### 错误边界（Error Boundary）
 
   Try/catch块无法捕获React渲染过程中发生的错误。呈现方法或钩子中抛出的错误会在组件树中冒泡。只有[Error Boundary](https://zh-hans.react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary)才能捕获这些错误。
-  
+
   ```jsx
   // ❌ Try/catch块无法捕获React渲染过程中发生的错误。
   function Parent() {
@@ -314,9 +314,9 @@
     }
   }
   ```
-  
+
   使用错误边界（Error Boundary）可以捕获后代组件中的错误，并渲染出备用页面。
-  
+
   ```jsx
   // ✅ 使用错误边界（Error Boundary）
   function Parent() {
@@ -327,16 +327,41 @@
     );
   }
   ```
-  
+
   错误边界的特点：只能捕获后代组件函数中的同步错误、Hook函数的错误，不能捕获其他组件的合成事件的错误，以及异步的错误。
-  
+
   > 对应类组件声明周期钩子中的错误、以及`render()`方法中的错误。
-  
+
   ##### 什么情况下使用错误边界？
-  
+
   如果父组件中要使用某个子组件，该子组件可能会发生错误，那么需要在父组件中使用错误边界，将错误限制在子组件中，不要影响父组件中其他地方的正常展示。
-  
+
   ##### 注意：错误边界只适用于生产环境，开发环境下页面还是会报错的。
+
+- ### `<form>`的`action`属性
+
+  React 19允许`<form>`的`action`属性值为一个函数。当提交时，表单中的数据会被 React 自动封装为`FormData`对象并调用这个函数。它内部大概等于：
+
+  ```jsx
+  <form onSubmit={...}>
+  
+  // ...
+  
+  function internalSubmitHandler(event) {
+    event.preventDefault()
+  
+    const formData = new FormData(form)
+  
+    submit(formData)
+  }
+  ```
+
+  也就是说，React 自动帮你：
+
+  - preventDefault
+  - 收集表单
+  - 转 FormData
+  - 调用函数
 
 # React Router（V7）
 

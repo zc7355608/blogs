@@ -641,10 +641,10 @@ Vue (发音为 /vjuː/，类似 **view**) 是一款用于构建用户界面的 J
       <template #fallback>
         <h3>loading....</h3>
       </template>
-  </Suspense>
+    </Suspense>
     ```
     
-  `<Suspense>`内部有2个插槽，异步组件要放到`default`默认插槽中，异步组件请求成功后展示；请求失败或未完成时，展示`fallback`备用插槽的内容。
+    `<Suspense>`内部有2个插槽，异步组件要放到`default`默认插槽中，异步组件请求成功后展示；请求失败或未完成时，展示`fallback`备用插槽的内容。
     
     ###### `async setup()`：
     
@@ -666,8 +666,8 @@ Vue (发音为 /vjuː/，类似 **view**) 是一款用于构建用户界面的 J
     
     ```vue
     <script setup>
-    const res = await fetch(...)
-    const posts = await res.json()
+      const res = await fetch(...)
+      const posts = await res.json()
     </script>
     
     <template>
