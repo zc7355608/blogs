@@ -20,12 +20,12 @@
 
        ```vue
       const school = Vue.extend({
-           template: `
+           template: '
                <div>
                	<h2>学校:{{name}}</h2>
                	<h2>地址:{{address}}</h2>
                </div>
-           `,
+           ',
            data(){
                return {
                	name: '河西蓝翔技校',
