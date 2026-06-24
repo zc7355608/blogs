@@ -10,39 +10,39 @@
 
   一个HTML/js文件中，定义了多个Vue的组件，这就属于**非单文件组件**。用法：
 
-  1. **定义组件**：`Vue.extend({})`调用后返回一个Vue的组件实例对象，参数中的配置对象和`new Vue({})`中的类似。
+  1. ##### 定义组件：
 
-     注意：
+     `Vue.extend({})`调用后返回一个Vue的组件实例对象，参数中的配置对象和`new Vue({})`中的类似。注意：
 
      - **组件的配置对象中没有`el`配置项**。因为`el`是整个应用所关联的Vue模板，而这个Vue模板是由最外层的Vue实例决定的，因此Vue实例中的子组件没有这个配置项。
 
      - 那么没有了`el`配置项，那么组件的结构（Vue模版）就只能通过`template`配置项来写了：
 
        ```vue
-      const school = Vue.extend({
-           template: '
-               <div>
-               	<h2>学校:{{name}}</h2>
-               	<h2>地址:{{address}}</h2>
-               </div>
-           ',
-           data(){
-               return {
-               	name: '河西蓝翔技校',
-               	address: '学校地址是这里'
-               }
-           },
-           methods: {
-               showName(){
-               	alert(this.name)
-               }
+       const school = Vue.extend({
+         template: `
+           <div>
+             <h2>学校:{{name}}</h2>
+             <h2>地址:{{address}}</h2>
+           </div>
+         `,
+         data(){
+           return {
+             name: '河西蓝翔技校',
+             address: '学校地址是这里'
            }
-       })
+         },
+         methods: {
+           showName(){
+             alert(this.name)
+           }
+         }
+       });
        ```
 
-     - **`data`只能用函数式写法**。因为对象式写法多个组件实例会共用这个`data`对象，数据不独立；而函数式写法每次调用会返回一个新的`data`对象，多个组件实例之间的`data`互不影响。
+     - ##### `data`只能用函数式写法。
 
-       > Vue建议在任何情况下，`data`都用函数式写法。
+       Vue建议在任何情况下，`data`都用函数式写法。因为对象式写法多个组件实例会共用这个`data`对象，数据不独立；而函数式写法每次调用会返回一个新的`data`对象，多个组件实例之间的`data`互不影响。
 
   2. **（局部）注册组件**：在使用组件的Vue实例的配置对象中，添加一个全新的配置项`components`，值是一个对象。对象的Key是组件名，value是组件实例对象：
 
@@ -52,11 +52,11 @@
      // ...
      
      new Vue({
-         components: {
-             School: school,
-             Home: home,
-             // ...
-         }
+       components: {
+         School: school,
+         Home: home,
+         // ...
+       }
      });
      ```
 
@@ -66,7 +66,7 @@
 
      ```html
      <div id="root">
-     	<School></School>
+       <School></School>
      </div>
      ```
 
@@ -114,19 +114,18 @@
     > Vue3中更推荐这样获取父组件实例：
 
     ```js
-    import { getCurrentInstance, onMounted } from 'vue'
+    import { getCurrentInstance, onMounted } from 'vue';
     
     export default {
-     setup() {
-        const instance = getCurrentInstance()
-    
+      setup() {
+        const instance = getCurrentInstance();
         onMounted(() => {
-          console.log(instance.parent)
-        })
-     }
+          console.log(instance.parent);
+        });
+      },
     }
     ```
-
+    
   - **一个重要的关系：**`VueComponent.prototype.__proto__ === Vue.prototype`，即：`VueComponent`是`Vue`的子类。**为什么要有这个关系？**为了让组件实例对象vc可以访问到 Vue 原型上的属性、方法。
 
 - ### 单文件组件（SFC）
