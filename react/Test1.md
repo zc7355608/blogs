@@ -193,9 +193,9 @@ React 是一个用于构建用户界面（UI）的 JS 库。用户界面由按�
 
   3. 如果标签要动态化，要用`{}`包起来。当React解析 JSX 时会立即执行里面的JS表达式。
 
-  4. 如果`{}`里面的是数组，那么React会自动帮你遍历数组，数组中每个元素都当作虚拟DOM（JSX的标签）顺序放在`{}`所在的位置。
+     > `{}`中的表达式可以返回一个 JSX 标签或 JSX 标签的数组，数组中的每个 JSX 元素会顺序放在`{}`所在的位置。这本质上和`{}`中放一堆 JSX 标签是一样的。
 
-  5. 和HTML中不同的是，标签的`class`属性改为了`className`。因为JSX中包含JS语法，而`class`是JS中的关键字。
+  5. 和HTML中不同的是，标签的`class`属性改为了`className`。因为 JSX 中包含 JS 语法，而`class`是JS中的关键字。
 
   6. 和HTML中不同的是，标签的`style`样式属性的值不能用字符串，也就是不能这样写：`<span style='margin: 10px'></span>`，值必须是JS中的对象（动态的），如：`<span style={ {backgroundColor:'red',color:'red'} }></span>`，CSS属性名采用小驼峰形式。
 
@@ -351,7 +351,7 @@ React 是一个用于构建用户界面（UI）的 JS 库。用户界面由按�
 
        > 注意，更新状态`state`必须通过`state setter`函数，这样才能做到响应式（即更改数据后，页面也随之渲染）。
 
-    如果初值需要通过复杂计算获得，则可以给 `useState(initFunc)` 传入一个函数，在函数中计算并返回初值。此函数**只会在初始渲染时被调用**，也就是该组件重新挂载时，这个函数不会被再次调用了。
+    如果初值需要通过复杂计算获得，则可以给 `useState(initFunc)` 传入一个函数，在函数中计算并返回初值。此函数**只会在组件初始渲染时被调用**，当组件重新渲染时，这个函数不会被再次调用了。
 
     state 的 setter 函数的参数是 state 变量的新值，而且也可以传一个函数：
 
@@ -385,8 +385,8 @@ React 是一个用于构建用户界面（UI）的 JS 库。用户界面由按�
 
     1. 通过类的构造器来初始化state：
 
-       ```js
-     class MyComponent {
+       ```jsx
+    class MyComponent {
          constructor(props) {
            super(props)
            // 初始化类式组件中的状态（state属性）
@@ -397,8 +397,8 @@ React 是一个用于构建用户界面（UI）的 JS 库。用户界面由按�
     
     2. （**推荐**）通过在类中定义固定的实例属性：
 
-       ```js
-        class MyComponent {
+       ```jsx
+       class MyComponent {
          // 初始化state状态
          state = { isHot: true }
        }
@@ -525,7 +525,7 @@ React 是一个用于构建用户界面（UI）的 JS 库。用户界面由按�
 
   1. **`props`是只读的，不允许修改**！
 
-  2. 给 React 组件传递`props`时可以简写。例如：
+  2. 给 React 组件（或原生标签）传递`props`时可以简写。例如：
 
      ```jsx
      const p = {
@@ -542,7 +542,7 @@ React 是一个用于构建用户界面（UI）的 JS 库。用户界面由按�
      <Student name="Tom" age={18} />
      ```
 
-     `<Student {...p}/>`，它表示将p
+     `<Student {...p}/>`，它表示将`p`对象展开，它内部的属性以 prop 的形式传递给标签。
 
      ```jsx
      let p = {name:'zs',age:13}`，`
@@ -631,7 +631,7 @@ React 是一个用于构建用户界面（UI）的 JS 库。用户界面由按�
 
       渲染该类组件时，React会将该 JSX 对应的真实DOM以K-V的形式收集到类组件实例的`refs`属性上，该属性的是一个对象，其中`key`是ref的值（`inputRef`），`value`是 ref 所在的真实DOM（如果是类组件标签，则收集到的是类组件实例）。
 
-    - ###### 回调函数的`ref`：
+    - ###### ~~回调函数的`ref`：~~
 
       ```jsx
       <input ref={(currentNode) => this.input1 = currentNode} type="text" />
@@ -688,8 +688,8 @@ React 是一个用于构建用户界面（UI）的 JS 库。用户界面由按�
   >
   > ```jsx
   > <div onClickCapture={() => { /* 这会首先执行 */ }}>
-  >   <button onClick={e => e.stopPropagation()} />
-  >   <button onClick={e => e.stopPropagation()} />
+  >     <button onClick={e => e.stopPropagation()} />
+  >     <button onClick={e => e.stopPropagation()} />
   > </div>
   > ```
   >

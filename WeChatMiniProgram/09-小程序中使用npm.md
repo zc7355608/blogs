@@ -61,12 +61,16 @@
 
    <img src="./images/46-初始化package.jpg" style="zoom:80%;" />
 
-   
+   > **注意**：自动生成的这个package.json文件，除了`dependencies`、`devDependencies`字段之外，其他的字段在小程序中没有任何作用。
 
 2. 通过 npm 安装 `@vant/weapp` 包
 
    ```shell
+   # 通过 npm 安装
    npm i @vant/weapp -S --production
+   
+   # 通过 yarn 安装
+   yarn add @vant/weapp --production
    ```
 
    ![](./images/vant-weapp.jpg)
