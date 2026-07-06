@@ -385,8 +385,8 @@ React 是一个用于构建用户界面（UI）的 JS 库。用户界面由按�
 
     1. 通过类的构造器来初始化state：
 
-       ```jsx
-    class MyComponent {
+       ```js
+       class MyComponent {
          constructor(props) {
            super(props)
            // 初始化类式组件中的状态（state属性）
@@ -397,7 +397,7 @@ React 是一个用于构建用户界面（UI）的 JS 库。用户界面由按�
     
     2. （**推荐**）通过在类中定义固定的实例属性：
 
-       ```jsx
+       ```js
        class MyComponent {
          // 初始化state状态
          state = { isHot: true }
@@ -545,7 +545,7 @@ React 是一个用于构建用户界面（UI）的 JS 库。用户界面由按�
      `<Student {...p}/>`，它表示将`p`对象展开，它内部的属性以 prop 的形式传递给标签。
 
      ```jsx
-     let p = {name:'zs',age:13}`，`
+     let p = {name:'zs',age:13};
      ```
 
      这是 **JS 的对象展开语法** 和 **JSX 语法** 结合的结果，不是 React 发明的新语法。
