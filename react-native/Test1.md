@@ -1,6 +1,6 @@
 # React Native
 
-### 移动开发技术简介
+### 前言——移动开发技术简介
 
 - #### 原生开发与跨平台技术
 
@@ -29,7 +29,7 @@
 
     - H5 + 原生（Cordova、Ionic、微信小程序）
     - JavaScript 开发 + 原生渲染 （React Native、Weex）
-    - 自绘UI + 原生 (Qt for mobile、Flutter)
+    - 自绘UI + 原生（Qt for mobile、Flutter）
 
     接下来我们逐个来看看这三类框架的原理及优缺点。
 
@@ -136,7 +136,7 @@
     而 RN 中将虚拟 DOM 映射为原生控件的过程主要分两步：
 
     1. 布局消息传递； 将虚拟 DOM 布局信息传递给原生；
-    2. 原生根据布局信息通过对应的原生控件渲染；
+    2. 原生根据布局信息，通过对应的原生控件渲染；
 
     至此，React Native 便实现了跨平台。 相对于混合应用，由于React Native是 原生控件渲染，所以性能会比混合应用中 H5 好一些，同时  React Native 提供了很多原生组件对应的 Web 组件，大多数情况下开发者只需要使用 Web 技术栈 就能开发出  App。我们可以发现，这样也就做到了维护一份代码，便可以跨平台了。
 
@@ -211,17 +211,23 @@
 
 > 注意：Flutter 的Release 包默认是使用 Dart AOT 模式编译的，所以不支持动态化，但 Dart 还有 JIT 或  snapshot 运行方式，这些模式都是支持动态化的。
 
+------
+
 ### React Native 入门
 
 React Native 是一个使用 React 和应用平台的原生功能来构建 Android 和 iOS 应用的开源框架。通过 React Native，您可以使用 JavaScript 来访问移动平台的  API，以及使用 React 组件来描述 UI 的外观和行为：一系列可重用、可嵌套的代码。
 
+你可以选择将 React Native 无缝集成到你已有的 Android 或 iOS 应用中，也可以完全使用 React Native 重写一个新的应用。
+
+> 由于 React Native 使用与 React 组件相同的 API 结构，因此您需要了解 React 组件 API 才能上手。
+
 接下来我们介绍一下组件在 React Native 中是如何工作的。
 
-在 Android 和 iOS 开发中，一个**视图**是 UI 的基本组成部分：屏幕上的一个小矩形元素、可用于显示文本、图像或响应用户输入。甚至应用程序最小的视觉元素（例如一行文本或一个按钮）也都是各种视图。某些类型的视图可以包含其他视图。全部都是视图。
+在 Android 和 iOS 开发中，一个**视图（view）**是 UI 的基本组成部分：屏幕上的一个小矩形元素、可用于显示文本、图像或响应用户输入。甚至应用程序最小的视觉元素（例如一行文本或一个按钮）也都是各种视图。某些类型的视图可以包含其他视图。全部都是视图。
 
 在 Android 开发中是使用 Kotlin 或 Java 来编写视图；在 iOS 开发中是使用 Swift 或 Objective-C 来编写视图。在 React Native 中，则使用 React 组件通过 JavaScript 来调用这些视图。在运行时，React  Native 为这些组件创建相应的 Android 和 iOS 视图。由于 **React Native 组件就是对原生视图的封装**，因此使用  React Native 编写的应用外观、感觉和性能与其他任何原生应用一样。我们将这些平台支持的组件称为**原生组件**。
 
-> React Native 允许您为 Android 和 iOS 构建自己的 Native Components（原生组件），以满足您开发应用程序的独特需求。
+> React Native 允许您为 Android 和 iOS 构建自己的 Native Components（原生组件），以满足您开发应用程序的独特需求。我们还有一个由社区贡献的繁荣生态系统，您可以到[Native Directory](https://reactnative.directory/)来查找社区已创建的内容。（不理解的话先忽略这句话）
 
 React Native 包括一组基础的、随时可用的原生组件，您可以使用它们来构建您的应用程序。它们是 React Native 的**核心组件**。
 
@@ -235,38 +241,37 @@ React Native 具有许多核心组件，从表单控件到活动指示器，应�
 | `<ScrollView>`       | `<ScrollView>`   | `<UIScrollView>` | `<div>`                 | 一个通用的滚动容器，可以包含多个组件和视图                   |
 | `<TextInput>`        | `<EditText>`     | `<UITextField>`  | `<input type="text">`   | 使用户可以输入文本                                           |
 
-另外有些内置组件的某些属性可能只在特定平台上有效。请在阅读文档时留意。
+*另外有些内置组件的某些属性可能只在特定平台上有效。请在阅读文档时留意*。
 
 > HelloWorld 程序：
 >
 > ```jsx
-> import React from 'react';
 > import { View, Text, Image, ScrollView, TextInput } from 'react-native';
 > 
 > const App = () => {
 >   return (
->     <ScrollView>
->       <Text>Some text</Text>
->       <View>
->         <Text>Some more text</Text>
->         <Image
->           source={{
->             uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
->           }}
->           style={{ width: 200, height: 200 }}
->         />
->       </View>
->       <TextInput
->         style={{
->           height: 40,
->           borderColor: 'gray',
->           borderWidth: 1
->         }}
->         defaultValue="You can type in me"
->       />
->     </ScrollView>
->   );
-> }
+>       <ScrollView>
+>          <Text>Some text</Text>
+>          <View>
+>            <Text>Some more text</Text>
+>            <Image
+>              source={{
+>                uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
+>              }}
+>              style={{ width: 200, height: 200 }}
+>            />
+>          </View>
+>          <TextInput
+>            style={{
+>              height: 40,
+>              borderColor: 'gray',
+>              borderWidth: 1
+>            }}
+>            defaultValue="You can type in me"
+>          />
+>        </ScrollView>
+>      );
+>   }
 > 
 > export default App;
 > ```
@@ -281,26 +286,25 @@ React Native 具有许多核心组件，从表单控件到活动指示器，应�
 
   在 iOS 上包含单个子元素的 ScrollViews 可以允许用户对内容进行缩放. 通过设置`maximumZoomScale`和`minimumZoomScale`两者的属性, 您的用户能够利用捏合以及扩大手势来放大或缩小。
 
-  `ScrollView`适合用来显示数量不多的滚动元素。放置在`ScrollView`中的所有组件都会被渲染，哪怕有些组件因为内容太长被挤出了屏幕外。如果你需要显示较长的滚动列表，那么应该使用功能差不多但**性能更好的`FlatList`组件**。下面我们来看看[如何使用长列表](https://reactnative.cn/docs/using-a-listview)。
+  **`ScrollView`适合用来显示数量不多的滚动元素**。放置在`ScrollView`中的所有组件都会被渲染，哪怕有些组件因为内容太长被挤出了屏幕外。如果你需要显示较长的滚动列表，那么应该使用功能差不多但**性能更好的`FlatList`组件**。下面我们来看看[如何使用长列表](https://reactnative.cn/docs/using-a-listview)。
 
 React Native 提供了几个适用于展示长列表数据的组件，一般而言我们会选用`<FlatList>`或`<SectionList>`。
 
-- `<FlatList>`：用于显示一个垂直的滚动列表，其中的元素之间结构近似而仅数据不同。
+- `<FlatList>`/`<SectionList>`：用于**显示一个垂直的滚动列表，其中的元素之间结构近似而仅数据不同**。
 
-  `FlatList`更适于长列表数据，且元素个数可以增删。和[`ScrollView`](https://reactnative.cn/docs/using-a-scrollview)不同的是，`FlatList`并不立即渲染所有元素，而是优先渲染屏幕上可见的元素。
+  **`FlatList`更适于长列表数据，且元素个数可以增删**。和[`ScrollView`](https://reactnative.cn/docs/using-a-scrollview)不同的是，`FlatList`并不立即渲染所有元素，而是**优先渲染屏幕上可见的元素**。
 
   `FlatList`组件必须的两个属性是`data`和`renderItem`。`data`是列表的数据源，而`renderItem`则从数据源中逐个解析数据，然后返回一个设定好格式的组件来渲染。
 
   下面的例子创建了一个简单的`FlatList`，并预设了一些模拟数据。首先是初始化`FlatList`所需的`data`，其中的每一项（行）数据之后都在`renderItem`中被渲染成了`Text`组件，最后构成整个`FlatList`。
 
   ```jsx
-  import React from 'react';
-  import { FlatList, StyleSheet, Text, View } from 'react-native';
+  import {FlatList, StyleSheet, Text, View} from 'react-native';
   
   const styles = StyleSheet.create({
     container: {
-     flex: 1,
-     paddingTop: 22
+      flex: 1,
+      paddingTop: 22,
     },
     item: {
       padding: 10,
@@ -329,21 +333,20 @@ React Native 提供了几个适用于展示长列表数据的组件，一般而�
         />
       </View>
     );
-  }
+  };
   
   export default FlatListBasics;
   ```
 
-- `<SectionList>`：如果要渲染的是一组需要分组的数据，也许还带有分组标签的，那么`SectionList`将是个不错的选择。
+  `<SectionList>`：如果要渲染的是一组需要分组的数据，也许还带有分组标签的，那么`SectionList`将是个不错的选择。
 
   ```jsx
-  import React from 'react';
-  import { SectionList, StyleSheet, Text, View } from 'react-native';
+  import {SectionList, StyleSheet, Text, View} from 'react-native';
   
   const styles = StyleSheet.create({
     container: {
-     flex: 1,
-     paddingTop: 22
+      flex: 1,
+      paddingTop: 22,
     },
     sectionHeader: {
       paddingTop: 2,
@@ -359,23 +362,36 @@ React Native 提供了几个适用于展示长列表数据的组件，一般而�
       fontSize: 18,
       height: 44,
     },
-  })
+  });
   
   const SectionListBasics = () => {
-      return (
-        <View style={styles.container}>
-          <SectionList
-            sections={[
-              {title: 'D', data: ['Devin', 'Dan', 'Dominic']},
-              {title: 'J', data: ['Jackson', 'James', 'Jillian', 'Jimmy', 'Joel', 'John', 'Julie']},
-            ]}
-            renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
-            renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title}</Text>}
-            keyExtractor={(item, index) => index}
-          />
-        </View>
-      );
-  }
+    return (
+      <View style={styles.container}>
+        <SectionList
+          sections={[
+            {title: 'D', data: ['Devin', 'Dan', 'Dominic']},
+            {
+              title: 'J',
+              data: [
+                'Jackson',
+                'James',
+                'Jillian',
+                'Jimmy',
+                'Joel',
+                'John',
+                'Julie',
+              ],
+            },
+          ]}
+          renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
+          renderSectionHeader={({section}) => (
+            <Text style={styles.sectionHeader}>{section.title}</Text>
+          )}
+          keyExtractor={item => `basicListEntry-${item}`}
+        />
+      </View>
+    );
+  };
   
   export default SectionListBasics;
   ```
@@ -388,7 +404,7 @@ React Native 提供了两种方法来区分平台：
 
 - #### `Platform`模块：
 
-  它是 React Native 提供的一个，用于检测当前运行平台的模块。如果**组件只有一小部分代码需要依据平台定制**，那么这个模块就可以派上用场。
+  它是 React Native 提供的一个**用于检测当前运行平台的模块**。如果**组件只有一小部分代码需要依据平台定制**，那么这个模块就可以派上用场。
 
   ```jsx
   import {Platform, StyleSheet} from 'react-native';
@@ -398,7 +414,7 @@ React Native 提供了两种方法来区分平台：
   });
   ```
 
-  `Platform.OS`在 iOS 上会返回`ios`，而在 Android 设备或模拟器上则会返回`android`。
+  `Platform.OS`在 iOS 上会返回`'ios'`，而在 Android 设备或模拟器上则会返回`'android'`。
 
   还有个实用的方法是 `Platform.select()`，它可以以 `Platform.OS` 为 key，从传入的对象中返回对应平台的值：
 
@@ -426,7 +442,7 @@ React Native 提供了两种方法来区分平台：
 
   上面的代码会根据平台的不同返回不同的 container 样式 —— iOS 上背景色为红色，android 为绿色，其他平台（如 web）为蓝色。
 
-  这一方法可以接受任何合法类型的参数，因此你也可以直接用它针对不同平台返回不同的组件，像下面这样：
+  **`Platform.select()` 方法可以接受任何合法类型的参数**，因此你也可以直接用它针对不同平台返回不同的组件，像下面这样：
 
   ```jsx
   const Component = Platform.select({
@@ -509,4 +525,9 @@ React Native 提供了两种方法来区分平台：
 
 ### 搭建开发环境
 
-你可以选择将 React Native 无缝集成到你已有的 Android 或 iOS 应用中，也可以完全使用 React Native 重写一个新的应用。
+搭建RN的开发环境通常有2种方式：
+
+```shell
+npx react-native init MyTestApp
+```
+

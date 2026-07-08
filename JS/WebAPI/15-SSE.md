@@ -1,4 +1,4 @@
-- ## Server-Sent Events(to learn)
+- ## Server-Sent Events
 
   服务器向客户端推送数据，有很多解决方案。除了“轮询” 和 WebSocket，HTML 5 还提供了 Server-Sent Events（以下简称 SSE）。
 
@@ -161,7 +161,7 @@
 
       上面三行之中，第一行的`Content-Type`必须指定 MIME 类型为`event-steam`。
 
-      每一次发送的信息，由若干个`message`组成，每个`message`之间用`\n\n`分隔。每个`message`内部由若干行组成，每一行都是如下格式。
+      每一次发送的信息，由若干个`message`组成，每个`message`之间用`\n\n`两个换行符分隔。每个`message`内部由若干行组成，每一行都是如下格式。
 
       ```tex
       [field]: value\n
@@ -260,13 +260,13 @@
 
     - ##### `retry` 字段：
 
-      服务器可以用`retry`字段，指定浏览器重新发起连接的时间间隔。
+      服务器可以用`retry`字段，指定当网络错误等原因导致链接断开时，浏览器自动重新发起连接的时间间隔。
 
       ```tex
       retry: 10000\n
       ```
 
-      两种情况会导致浏览器重新发起连接：一种是时间间隔到期，二是由于网络错误等原因，导致连接出错。
+      浏览器会选择最新的一次数据的`retry`字段来设置重连时的时间间隔。
 
   - #### Node 服务器实例
 
