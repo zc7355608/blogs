@@ -523,11 +523,223 @@ React Native 提供了两种方法来区分平台：
 
   **提示:** 为避免在构建后的 Web 生产环境的代码中出现多余代码，要记得在你的 Web 打包工具中**配置忽略`.native.js`结尾的文件**, 这样可以**减少打包后文件的大小**。
 
-### 搭建开发环境
-
-搭建RN的开发环境通常有2种方式：
+### 使用Expo框架搭建一个React Native项目
 
 ```shell
-npx react-native init MyTestApp
+npx create-expo-app@latest MyTestApp
 ```
+
+### 搭建开发环境——基于React Native CLI
+
+如果你有框架不能很好地满足的约束，或者你更喜欢编写自己的框架，你可以在不使用框架的情况下创建一个React Native应用程序。
+
+为此，您首先需要设置您的环境。设置完成后，继续下面的步骤以创建应用程序并开始开发。
+
+> 搭建开发环境可以参考RN官网（https://reactnative.dev/docs/set-up-your-environment），笔记中的安装方式可能不是最新的。
+
+如果你使用的是Windows系统，那么只能安装Android的开发环境；如果是Mac系统，则可以安装Android和iOS开发环境。
+
+#### 搭建安卓开发环境
+
+你需要安装：React Native CLI、Node、JDK 和 Android Studio。
+
+虽然你可以使用`任何编辑器`来开发应用（比如使用VSCode来编写 js 代码），但你仍然必须安装 Android Studio 来获得编译 Android 应用所需的工具和环境。
+
+1. ##### Nodejs、JDK：
+
+   直接到Node和JDK的官网下载安装即可。
+
+   注意 Node >= 22.11.0（LTS），安装完 Node 后建议设置 npm 镜像（淘宝源）以加速后面的过程（或使用科学上网工具）。不要使用 cnpm！cnpm 安装的模块路径比较奇怪，packager 不能正常识别！
+
+   ```shell
+   # 使用nrm工具切换淘宝源
+   npx nrm use taobao
+   
+   # 如果之后需要切换回官方源可使用
+   npx nrm use npm
+   ```
+
+   React Native 建议使用 Java Development Kit [JDK] 17。你可以在命令行中输入 `javac -version`（请注意是 javac，不是 java）来查看你当前安装的 JDK 版本。如果使用其他版本可能会遇到兼容性问题（低于 0.73 版本的 React Native 需要 JDK 11 版本，而低于 0.67 的需要 JDK 8 版本）
+
+2. ##### Yarn（可选）：
+
+   [Yarn](http://yarnpkg.com)是 Facebook 提供的替代 npm 的工具，可以加速 node 模块的下载。
+
+   ```shell
+   npm install -g yarn
+   ```
+
+   安装完 yarn 之后就可以用 yarn 代替 npm 了，例如用`yarn`代替`npm install`命令，用`yarn add 某第三方库名`代替`npm install 某第三方库名`。
+
+3. ##### Android Studio：
+
+   如果你之前没有接触过 Android 的开发环境，那么请做好心理准备，这一过程相当繁琐。请`万分仔细`地阅读下面的说明，严格对照文档进行配置操作。
+
+   > 请注意！！！国内用户`必须必须必须`有稳定的代理软件，否则在下载、安装、配置过程中会不断遭遇链接超时或断开，无法进行开发工作。某些代理软件可能只提供浏览器的代理功能，或只针对特定网站代理等等，请自行研究配置或更换其他软件。总之如果报错中出现有网址，那就是因为链接源仓库的网络链接被阻断了，这一阻断现象可能因时间、地区、运营商而不同。
+
+   [首先下载和安装 Android Studio](https://developer.android.google.cn/studio/)，国内用户可能无法打开官方链接，请自行使用搜索引擎搜索可用的下载链接。安装界面中选择"Custom"选项，确保选中了以下几项：（Hyper-V功能可选）
+
+   - `Android SDK`
+   - `Android SDK Platform`
+   - `Android Virtual Device`
+
+   然后点击"Next"来安装选中的组件。
+
+   > 如果选择框是灰的，你也可以先跳过，稍后再来安装这些组件。
+
+   安装完成后，看到欢迎界面时，就可以进行下面的操作了。
+
+4. ##### 安装Android SDK：
+
+   Android Studio 默认会安装最新版本的 Android SDK。目前编译 React Native 应用需要的是`Android 15 (VanillaIceCream)`版本的 SDK（注意 SDK 版本不等于对用户系统版本的要求，RN 目前最低要求的 Android 版本请点击[这里](https://github.com/facebook/react-native?tab=readme-ov-file#-requirements)查看）。你可以在 Android Studio 的 SDK Manager 中选择安装各版本的 SDK。
+
+   你可以在 Android Studio 的欢迎界面中找到 SDK Manager。点击"Configure"，然后就能看到"SDK Manager"。
+
+   > SDK Manager 也可以在Android Studio的“Settings”对话框中的“**Languages & Frameworks**”→“**Android SDK**”下找到。
+
+   在 SDK Manager 中选择"SDK Platforms"选项卡，然后在右下角勾选"Show Package Details"。展开`Android 15 (VanillaIceCream)`选项，确保勾选了下面这些组件（如果你看不到这个界面，则需要使用稳定的代理软件）：
+
+   - `Android SDK Platform 35`
+   - `Intel x86 Atom_64 System Image` 或 `Google APIs Intel x86 Atom System Image`（官方模拟器镜像文件，使用非官方模拟器不需要安装此组件）
+
+   ![image-20260710181317778](./assets/image-20260710181317778.png)
+
+   然后点击"SDK Tools"选项卡，同样勾中右下角的"Show Package Details"。展开"Android SDK Build-Tools"选项，然后确保选择了36.0.0和Android SDK Command-line Tools（latest）。（你可以同时安装多个其他版本）
+
+   ![image-20260710175910103](./assets/image-20260710175910103.png)
+
+   ![image-20260710175944243](./assets/image-20260710175944243.png)
+
+   最后点击"Apply"来下载和安装这些组件。
+
+5. ##### 配置 `ANDROID_HOME` 环境变量：
+
+   React Native 需要通过环境变量来了解你的 Android SDK 装在什么路径，从而正常进行编译。
+
+   打开`控制面板` -> `系统和安全` -> `系统` -> `高级系统设置` -> `高级` -> `环境变量` -> `新建`，创建一个名为`ANDROID_HOME`的环境变量（系统或用户变量均可），指向你的 Android SDK 所在的目录（具体的路径可能和下图不一致，请自行确认）：
+
+   ![image-20260710181726093](./assets/image-20260710181726093.png)
+
+   SDK 默认是安装在下面的目录：
+
+   ```tex
+   C:\Users\你的用户名\AppData\Local\Android\Sdk
+   ```
+
+   你可以在 Android Studio 的"Settings"菜单中查看 SDK 的真实路径，具体是 **Languages & Frameworks** → **Android SDK**。
+
+   打开一个新的命令提示符窗口，输入`Get-ChildItem -Path Env:\`后回车，验证`ANDROID_HOME`是否生效。生效后再进行下一步操作。
+
+6. ##### 把工具目录添加到环境变量 `Path`：
+
+   打开`控制面板` -> `系统和安全` -> `系统` -> `高级系统设置` -> `高级` -> `环境变量`，选中**Path**变量，然后点击**编辑**。点击**新建**然后把以下工具目录路径添加进去：platform-tools
+
+   ```tex
+   %ANDROID_HOME%\platform-tools
+   ```
+
+7. ##### 准备安卓设备：
+
+   你需要准备一台 Android 设备来运行 React Native Android  应用。这里所指的设备既可以是真机，也可以是模拟器。后面我们所有的文档除非特别说明，并不区分真机或者模拟器。Android 官方提供了名为  Android Virtual Device（简称 AVD）的模拟器。此外还有很多第三方提供的模拟器如[Genymotion](https://www.genymotion.com/download)、BlueStack 等。一般来说官方模拟器免费、功能完整，但性能较差。第三方模拟器性能较好，但可能需要付费，或带有广告。
+   
+   你也可以使用 Android 真机来代替模拟器进行开发，只需用 usb 数据线连接到电脑，然后遵照[在设备上运行](https://reactnative.dev/docs/running-on-device)这篇文档的说明操作即可。
+   
+   你可以使用 Android Studio 打开项目下的"android"目录，然后可以使用"AVD Manager"来查看可用的虚拟设备，它的图标看起来像下面这样：
+   
+   <img src="./assets/GettingStartedAndroidStudioAVD-1783692550373-2.svg" alt="GettingStartedAndroidStudioAVD" style="zoom: 200%;" />
+   
+   如果你刚刚才安装 Android Studio，那么可能需要先[创建一个虚拟设备](https://developer.android.com/studio/run/managing-avds?hl=zh-cn)。点击"Create Virtual Device..."，选择所需的设备类型并点击"Next"，然后选择 **API 35 VanillaIceCream** 的镜像版本。
+   
+   > 机型选择Pixel 8 或 Pixel 9（任选一个较新的 Pixel 机型即可），Services选择Google Play Store，它更贴近用户的真实设备，Google APIs不包含谷歌应用市场， AOSP（不推荐）基本只有做系统底层开发的人才会选。System Image选择带⭐的默认的镜像即可。
+   >
+   > 注意：请不要轻易点击 Android Studio 中可能弹出的建议更新项目中某依赖项的建议，否则可能导致无法运行。
+
+#### 搭建iOS开发环境
+
+xxx
+
+> 如果你在使用iOS时遇到问题，请尝试通过运行以下命令重新安装依赖项：
+>
+> 1. `cd ios` 切到 `ios` 目录中。
+> 2. `bundle install` 去安装 [Bundler](https://bundler.io/)。
+> 3. `bundle exec pod install` 去安装由CocoaPods管理的iOS依赖项。
+
+#### 使用CLI创建一个新的React Native项目
+
+目标环境准备好之后，我们通过CLI来创建RN项目。
+
+使用 React Native 内建的命令行工具来创建一个名为"AwesomeProject"的新项目。这个命令行工具不需要安装，可以直接用 node 自带的`npx`命令来使用：
+
+```shell
+npx @react-native-community/cli@latest init AwesomeProject
+```
+
+> 如果您以前安装了`react-native-cli`全局包，请将其删除，因为它可能会导致意外问题：
+>
+> ```shell
+> npm uninstall -g react-native-cli @react-native-community/cli
+> ```
+
+如果你正在将React Native集成到现有应用程序中，或者您已经在项目中安装了Expo，或者您正在将Android支持添加到现有React  Native项目中，则不需要这样做（请参阅[与现有应用程序集成](https://reactnative.dev/docs/integration-with-existing-apps)）。你也可以使用第三方CLI来设置你的React Native应用，比如 [Ignite CLI](https://github.com/infinitered/ignite)。
+
+如果你想用特定的React Native版本启动一个新项目，你可以使用`--version`参数：（注意版本号必须精确到两个小数点）
+
+```shell
+npx @react-native-community/cli@X.XX.X init AwesomeProject --version X.XX.X
+```
+
+你也可以使用自定义的React Native模板和`--template`参数启动一个项目，在[这里](https://github.com/react-native-community/cli/blob/main/docs/init.md#initializing-project-with-custom-template)阅读更多。
+
+#### 启动项目
+
+打开Android Studio，在Device Manager中启动一个虚拟安卓设备，然后在RN项目根目录下运行命令：
+
+```shell
+npm run android
+```
+
+此命令会对项目的原生部分进行编译，同时在另外一个命令行中启动`Metro`服务对 js 代码进行实时打包处理（类似 webpack）。`Metro`服务也可以使用`npm start`命令单独启动。
+
+如果配置没有问题，你应该可以看到应用自动安装到设备上并开始运行。注意第一次运行时需要下载大量编译依赖，耗时可能数十分钟。此过程**严重依赖稳定的代理软件**，否则将频繁遭遇链接超时和断开，导致无法运行。
+
+`npx react-native run-android`只是运行应用的方式之一。你也可以在 Android Studio 中直接运行应用。
+
+作用：
+
+- 调用 Gradle 编译 Android 工程
+- 生成 APK
+- 安装到模拟器/真机
+- 启动 App
+- 告诉 App 去连接 Metro
+
+该脚本**不负责实时打包 JS**。打包工作是Metro做的。
+
+如果一切设置正确，您应该很快就会看到新应用在Android模拟器中运行。
+
+![image-20260711143901923](./assets/image-20260711143901923.png)
+
+#### 关于`Metro`
+
+Metro是React Native的JS构建工具，它将代码组织成 Bundle，供应用内的 JS 引擎（如 Hermes）执行。要启动Metro开发服务器，请从项目文件夹中运行以下命令：
+
+```shell
+npm start
+```
+
+> 如果您熟悉Web开发，Metro类似于Vite和Webpack等工具，但它是为React Native设计的端到端打包工具。例如，Metro使用Babel将JSX等语法转换为可执行的JS代码。
+>
+> 除了打包，Metro 还负责很多开发体验：
+>
+> - **模块解析**：处理 `import`、`export`
+> - **代码转换**：通过 Babel 把 JSX、TypeScript 转换成 JavaScript
+> - **生成 Source Map**：方便调试
+> - **Hot Reload / Fast Refresh**：修改代码后快速刷新界面
+> - **开发服务器**：启动一个本地服务，手机或模拟器从这里获取最新的 Bundle
+
+现在您已经成功运行了应用程序，让我们修改它。
+
+1. 在你选择的文本编辑器中打开App.tsx并编辑一些行。
+2. 在Mrtro的命令窗口输入r进行“Reload”以查看您的更改！
+
+恭喜你！你已经成功运行并修改了你的第一个准系统React Native应用。
 
