@@ -523,11 +523,32 @@ React Native 提供了两种方法来区分平台：
 
   **提示:** 为避免在构建后的 Web 生产环境的代码中出现多余代码，要记得在你的 Web 打包工具中**配置忽略`.native.js`结尾的文件**, 这样可以**减少打包后文件的大小**。
 
-### 使用Expo框架搭建一个React Native项目
+### 使用Expo框架搭建一个React Native项目（官方推荐）
+
+Expo是一个生产级的React Native框架。Expo提供了开发人员工具，使开发安卓/iOS应用程序更容易，例如基于文件的路由，本机模块的标准库等等。
+
+Expo的框架是免费和开源的，在GitHub和Discord上有一个活跃的社区。Expo团队与Meta的React Native团队密切合作，为Expo SDK带来最新的React Native功能。
+
+Expo的团队还提供Expo应用服务（EAS），这是一套可选的服务，在开发过程的每个步骤中对Expo框架进行补充。
+
+要求：
+
+- 支持macOS、Windows（PowerShell和WSL 2）和Linux。
+- Node >= 12的LTS版本
+
+创建项目：
 
 ```shell
 npx create-expo-app@latest MyTestApp
 ```
+
+> 注意：在SDK 57过渡期间，不带`--template`标志的`create-expo-app@latest`会创建一个SDK 54项目。如果您计划在物理设备上使用Expo Go，请使用SDK 54项目。否则，使用`--template default@sdk-57`创建SDK 57项目。您还可以通过添加`--template`选项来选择不同的模板。
+>
+> ```shell
+> npx create-expo-app@latest MyTestApp --template default@sdk-57
+> ```
+
+这里我们只简单做一个介绍，具体如何部署开发环境进行开发，请参考[Expo官网](https://docs.expo.dev/get-started/create-a-project/)。
 
 ### 搭建开发环境——基于React Native CLI
 
