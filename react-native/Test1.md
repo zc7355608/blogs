@@ -28,7 +28,7 @@
     针对原生开发面临的问题，业界一直都在努力寻找好的解决方案，而时至今日，已经有很多跨平台框架（注意，本书中所指的“跨平台”若无特殊说明，即特指 Android 和 iOS 两个平台），根据其原理，主要分为三类：
 
     - H5 + 原生（Cordova、Ionic、微信小程序）
-    - JavaScript 开发 + 原生渲染 （React Native、Weex）
+    - JS 开发 + 原生渲染 （React Native、Weex）
     - 自绘UI + 原生（Qt for mobile、Flutter）
 
     接下来我们逐个来看看这三类框架的原理及优缺点。
@@ -45,13 +45,13 @@
 
   - ##### 混合开发技术点：
 
-    如之前所述，原生开发可以访问平台所有功能，而混合开发中，H5代码是运行在 WebView 中，而 WebView  实质上就是一个浏览器内核，其 JavaScript  依然运行在一个权限受限的沙箱中，所以对于大多数系统能力都没有访问权限，如无法访问文件系统、不能使用蓝牙等。所以，对于 H5  不能实现的功能，就需要原生去做了。
+    如之前所述，原生开发可以访问平台所有功能，而混合开发中，H5代码是运行在 WebView 中，而 WebView  实质上就是一个浏览器内核，其 JS  依然运行在一个权限受限的沙箱中，所以对于大多数系统能力都没有访问权限，如无法访问文件系统、不能使用蓝牙等。所以，对于 H5  不能实现的功能，就需要原生去做了。
 
-    混合框架一般都会在原生代码中预先实现一些访问系统能力的 API ， 然后暴露给 WebView 以供 JavaScript 调用。这样一来，WebView 中 JavaScript 与原生 API 之间就需要一个通信的桥梁，主要负责  JavaScript 与原生之间传递调用消息，而消息的传递必须遵守一个标准的协议，它规定了消息的格式与含义，我们把依赖于 WebView  的用于在 JavaScript 与原生之间通信并实现了某种消息传输协议的工具称之为 **WebView JavaScript Bridge** , 简称 **JsBridge**，它也是混合开发框架的核心。
+    混合框架一般都会在原生代码中预先实现一些访问系统能力的 API ， 然后暴露给 WebView 以供 JS 调用。这样一来，WebView 中 JS 与原生 API 之间就需要一个通信的桥梁，主要负责  JS 与原生之间传递调用消息，而消息的传递必须遵守一个标准的协议，它规定了消息的格式与含义，我们把依赖于 WebView  的用于在 JS 与原生之间通信并实现了某种消息传输协议的工具称之为 **WebView JavaScript Bridge** , 简称 **JsBridge**，它也是混合开发框架的核心。
 
-    ###### 示例：JavaScript调用原生API获取手机型号：
+    ###### 示例：JS调用原生API获取手机型号：
 
-    下面我们以 Android 为例，实现一个获取手机型号的原生 API 供 JavaScript 调用。在这个示例中将展示 JavaScript 调用原生  API 的流程，读者可以直观的感受一下调用流程。我们选用笔者在Github上开源的 dsBridge作为 JsBridge  来进行通信。dsBridge 是笔者实现的一个跨平台的 JsBridge 库，此示例中只使用其同步调用功能。
+    下面我们以 Android 为例，实现一个获取手机型号的原生 API 供 JS 调用。在这个示例中将展示 JS 调用原生  API 的流程，读者可以直观的感受一下调用流程。我们选用笔者在Github上开源的 dsBridge作为 JsBridge  来进行通信。dsBridge 是笔者实现的一个跨平台的 JsBridge 库，此示例中只使用其同步调用功能。
 
     - 首先在原生中实现获取手机型号的API `getPhoneModel`
 
@@ -76,7 +76,7 @@
       dwebView.addJavascriptObject(new JsAPI(), null);
       ```
 
-    - 在JavaScript中调用原生API
+    - 在JS中调用原生API
 
       ```js
       var dsBridge = require("dsbridge")
@@ -86,15 +86,15 @@
       console.log(model);
       ```
 
-    上面示例演示了 JavaScript 调用原生 API 的过程，同样的，一般来说优秀的 JsBridge 也支持原生调用 JavaScript ，dsBridge 也是支持的，如果您感兴趣，可以去 Github dsBridge 项目主页查看。
+    上面示例演示了 JS 调用原生 API 的过程，同样的，一般来说优秀的 JsBridge 也支持原生调用 JS ，dsBridge 也是支持的，如果您感兴趣，可以去 Github dsBridge 项目主页查看。
 
-    现在，我们回头来看一下，混合应用无非就是在第一步中预先实现一系列 API 供 JavaScript 调用，让 JavaScript 有访问系统功能的能力，看到这里，我相信你也可以自己实现一个混合开发框架了。
+    现在，我们回头来看一下，混合应用无非就是在第一步中预先实现一系列 API 供 JS 调用，让 JS 有访问系统功能的能力，看到这里，我相信你也可以自己实现一个混合开发框架了。
 
   混合应用的优点是：动态内容可以用 H5开发，而H5是Web 技术栈，Web技术栈生态开放且社区资源丰富，整体开发效率高。缺点是性能体验不佳，对于复杂用户界面或动画，WebView 有时会不堪重任。
 
 - #### React Native、Weex
 
-  这里介绍一下 **JavaScript开发 + 原生渲染** 的跨平台框架原理。
+  这里介绍一下 **JS开发 + 原生渲染** 的跨平台框架原理。
 
   React  Native （简称 RN ）是 Facebook 于 2015 年 4 月开源的跨平台移动应用开发框架，是 Facebook 早先开源的  Web 框架 React 在原生移动应用平台的衍生产物，目前支持 iOS 和 Android 两个平台。RN 使用JSX 语言（扩展后的  JavaScript，主要是可以在 JavaScript 中写 HTML标签）和 CSS 来开发移动应用。因此，熟悉 Web  前端开发的技术人员只需很少的学习就可以进入移动应用开发领域。
 
@@ -128,10 +128,10 @@
 
     上文已经提到 React Native 是 React 在原生移动应用平台的衍生产物，那两者主要的区别是什么呢？其实，主要的区别在于虚拟  DOM 映射的对象是什么。React中虚拟 DOM 最终会映射为浏览器 DOM 树，而 RN 中虚拟 DOM会通过 JavaScriptCore 映射为原生控件。
 
-    JavaScriptCore 是一个JavaScript解释器，它在React Native中主要有两个作用：
+    JavaScriptCore 是一个JS解释器，它在React Native中主要有两个作用：
 
-    1. 为 JavaScript 提供运行环境。
-    2. 是 JavaScript 与原生应用之间通信的桥梁，作用和 JsBridge 一样，事实上，在 iOS 中，很多 JsBridge 的实现都是基于 JavaScriptCore 。
+    1. 为 JS 提供运行环境。
+    2. 是 JS 与原生应用之间通信的桥梁，作用和 JsBridge 一样，事实上，在 iOS 中，很多 JsBridge 的实现都是基于 JavaScriptCore 。
 
     而 RN 中将虚拟 DOM 映射为原生控件的过程主要分两步：
 
@@ -144,7 +144,7 @@
 
     Weex 是阿里巴巴于 2016 年发布的跨平台移动端开发框架，思想及原理和 React Native  类似，底层都是通过原生渲染的，不同是应用层开发语法 （即 DSL，Domain Specific Language）：Weex 支持 Vue  语法和 Rax 语法，Rax 的 DSL(Domain Specific Language) 语法是基于 React JSX 语法而创造，而  RN 的 DSL 是基于 React 的，不支持 Vue。
 
-  JavaScript 开发 + 原生渲染 的方式主要优点如下：
+  JS 开发 + 原生渲染 的方式主要优点如下：
 
   1. 采用 Web 开发技术栈，社区庞大、上手快、开发成本相对较低。
   2. 原生渲染，性能相比 H5 提高很多。
@@ -152,8 +152,8 @@
 
   不足：
 
-  1. 渲染时需要 JavaScript 和原生之间通信，在有些场景如拖动可能会因为通信频繁导致卡顿。
-  2. JavaScript 为脚本语言，执行时需要解释执行 （这种执行方式通常称为 JIT，即 Just In  Time，指在执行时实时生成机器码），执行效率和编译类语言（编译类语言的执行方式为 AOT ，即 Ahead Of  Time，指在代码执行前已经将源码进行了预处理，这种预处理通常情况下是将源码编译为机器码或某种中间码）仍有差距。
+  1. 渲染时需要 JS 和原生之间通信，在有些场景如拖动可能会因为通信频繁导致卡顿。
+  2. JS 为脚本语言，执行时需要解释执行 （这种执行方式通常称为 JIT，即 Just In  Time，指在执行时实时生成机器码），执行效率和编译类语言（编译类语言的执行方式为 AOT ，即 Ahead Of  Time，指在代码执行前已经将源码进行了预处理，这种预处理通常情况下是将源码编译为机器码或某种中间码）仍有差距。
   3. 由于渲染依赖原生控件，不同平台的控件需要单独维护，并且当系统更新时，社区控件可能会滞后；除此之外，其控件系统也会受到原生UI系统限制，例如，在 Android  中，手势冲突消歧规则是固定的，这在使用不同人写的控件嵌套时，手势冲突问题将会变得非常棘手。这就会导致，如果需要自定义原生渲染组件时，开发和维护成本过高。
 
 - #### Qt Mobile
@@ -171,8 +171,8 @@
 
     不足：
 
-    1. 动态性不足；为了保证UI绘制性能，自绘UI系统一般都会采用 AOT 模式编译其发布包，所以应用发布后，不能像 Hybrid 和 RN 那些使用 JavaScript（JIT）作为开发语言的框架那样动态下发代码。
-    2. 应用开发效率低：Qt 使用 C++ 作为其开发语言，而编程效率是直接会影响 App 开发效率的，C++ 作为一门静态语言，在 UI 开发方面灵活性不及  JavaScript 这样的动态语言，另外，C++需要开发者手动去管理内存分配，没有 JavaScript 及Java中垃圾回收（GC）的机制。
+    1. 动态性不足；为了保证UI绘制性能，自绘UI系统一般都会采用 AOT 模式编译其发布包，所以应用发布后，不能像 Hybrid 和 RN 那些使用 JS（JIT）作为开发语言的框架那样动态下发代码。
+    2. 应用开发效率低：Qt 使用 C++ 作为其开发语言，而编程效率是直接会影响 App 开发效率的，C++ 作为一门静态语言，在 UI 开发方面灵活性不及  JS 这样的动态语言，另外，C++需要开发者手动去管理内存分配，没有 JS 及Java中垃圾回收（GC）的机制。
 
     Flutter 就属于这一类跨平台技术。它实现了一套自绘引擎，并拥有一套自己的 UI  布局系统，且同时在开发效率上有了很大突破。不过，自绘制引擎的思路并不是什么新概念，Flutter 并不是第一个尝试这么做的，在它之前有一个典型的代表，即大名鼎鼎的Qt。
 
@@ -201,11 +201,11 @@
 
 目前移动开发中三种跨平台技术，现在我们从框架角度对比一下它们：
 
-| 技术类型              | UI渲染方式      | 性能 | 开发效率        | 动态化     | 框架代表       |
-| --------------------- | --------------- | ---- | --------------- | ---------- | -------------- |
-| H5 + 原生             | WebView渲染     | 一般 | 高              | 支持       | Cordova、Ionic |
-| JavaScript + 原生渲染 | 原生控件渲染    | 好   | 中              | 支持       | RN、Weex       |
-| 自绘UI + 原生         | 调用系统API渲染 | 好   | Flutter高, Qt低 | 默认不支持 | Qt、Flutter    |
+| 技术类型      | UI渲染方式      | 性能 | 开发效率        | 动态化     | 框架代表       |
+| ------------- | --------------- | ---- | --------------- | ---------- | -------------- |
+| H5 + 原生     | WebView渲染     | 一般 | 高              | 支持       | Cordova、Ionic |
+| JS + 原生渲染 | 原生控件渲染    | 好   | 中              | 支持       | RN、Weex       |
+| 自绘UI + 原生 | 调用系统API渲染 | 好   | Flutter高, Qt低 | 默认不支持 | Qt、Flutter    |
 
 上表中开发语言主要指应用层的开发语言，而开发效率，是指整个开发周期的效率，包括编码时间、调试时间、以及排错、处理兼容性问题时间。动态化主要指是否支持动态下发代码和是否支持热更新。
 
@@ -215,7 +215,7 @@
 
 ### React Native 入门
 
-React Native 是一个使用 React 和应用平台的原生功能来构建 Android 和 iOS 应用的开源框架。通过 React Native，您可以使用 JavaScript 来访问移动平台的  API，以及使用 React 组件来描述 UI 的外观和行为：一系列可重用、可嵌套的代码。
+React Native 是一个使用 React 和应用平台的原生功能来构建 Android 和 iOS 应用的开源框架。通过 React Native，您可以使用 JS 来访问移动平台的  API，以及使用 React 组件来描述 UI 的外观和行为：一系列可重用、可嵌套的代码。
 
 你可以选择将 React Native 无缝集成到你已有的 Android 或 iOS 应用中，也可以完全使用 React Native 重写一个新的应用。
 
@@ -225,7 +225,7 @@ React Native 是一个使用 React 和应用平台的原生功能来构建 Andro
 
 在 Android 和 iOS 开发中，一个**视图（view）**是 UI 的基本组成部分：屏幕上的一个小矩形元素、可用于显示文本、图像或响应用户输入。甚至应用程序最小的视觉元素（例如一行文本或一个按钮）也都是各种视图。某些类型的视图可以包含其他视图。全部都是视图。
 
-在 Android 开发中是使用 Kotlin 或 Java 来编写视图；在 iOS 开发中是使用 Swift 或 Objective-C 来编写视图。在 React Native 中，则使用 React 组件通过 JavaScript 来调用这些视图。在运行时，React  Native 为这些组件创建相应的 Android 和 iOS 视图。由于 **React Native 组件就是对原生视图的封装**，因此使用  React Native 编写的应用外观、感觉和性能与其他任何原生应用一样。我们将这些平台支持的组件称为**原生组件**。
+在 Android 开发中是使用 Kotlin 或 Java 来编写视图；在 iOS 开发中是使用 Swift 或 Objective-C 来编写视图。在 React Native 中，则使用 React 组件通过 JS 来调用这些视图。在运行时，React  Native 为这些组件创建相应的 Android 和 iOS 视图。由于 **React Native 组件就是对原生视图的封装**，因此使用  React Native 编写的应用外观、感觉和性能与其他任何原生应用一样。我们将这些平台支持的组件称为**原生组件**。
 
 > React Native 允许您为 Android 和 iOS 构建自己的 Native Components（原生组件），以满足您开发应用程序的独特需求。我们还有一个由社区贡献的繁荣生态系统，您可以到[Native Directory](https://reactnative.directory/)来查找社区已创建的内容。（不理解的话先忽略这句话）
 
@@ -763,4 +763,6 @@ npm start
 2. 在Mrtro的命令窗口输入r进行“Reload”以查看您的更改！
 
 恭喜你！你已经成功运行并修改了你的第一个准系统React Native应用。
+
+------
 

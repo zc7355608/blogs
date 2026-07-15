@@ -35,8 +35,51 @@
    ```
 
    > 你还可以使用 `React Native CLI` 来生成和运行 `release` 版本的应用，例如在项目根目录下：`npm run android --mode release`。
+   >
+   > 并且还可以通过参数`deviceId`来指定运行到哪个设备中：
+   >
+   > ```shell
+   > npm run android -- --mode release --deviceId 设备ID
+   > ```
 
-##### 从设备上访问开发服务器：
+##### USB调试未授权/未开启导致连接失败：
+
+如果发现手机通过USB链接上了开发设备，但是执行启动后拉起的不是真机，而是模拟器，可以按照以下步骤进行排查：
+
+1. 命令行执行命令`adb devices`查看设备状态。如果显示以下的状态码(`unauthorized`)，这意味着你的真机虽然连上了电脑，但是手机拒绝了电脑的调试请求：
+
+   ```tex
+   List of devices attached
+   EMH0221A22010689        unauthorized
+   ```
+
+   React Native CLI 无法向一台未授权的手机安装应用，所以它只能退而求其次，把应用安装到模拟器上。
+
+2. 解锁并查看手机，看手机上是否弹出了一个对话框：“允许 USB 调试吗？”（或者“是否允许通过 USB 连接进行调试？”）。如果看到了，务必勾选“始终允许来自此计算机”，然后点击 “允许”或“确定”。如果没有，则手动打开手机的 **设置** -> **开发者选项**，寻找并开启**USB调试**。
+
+3. 如果开启了之后，运行`adb devices`还是显示未授权，则需要让手机“失忆”并重新弹窗。
+
+   1. 在手机上进入 设置 -> 开发者选项。往下划，找到并点击 “撤销 USB 调试授权”（或者叫“清除 USB 调试授权”），点击确定。
+
+   2. 拔掉手机数据线。在电脑 PowerShell 中分别运行以下2个命令，来重启电脑的 ADB 服务：
+
+      ```shell
+      adb kill-server
+      adb start-server
+      ```
+
+   3. 重新插上数据线，如果出现USB调试弹窗，则允许。或者手动打开手机的USB调试开关。
+
+4. 最后运行`adb devices`，如果设备状态为`device`则说明设备连接成功：
+
+   ```tex
+   List of devices attached
+   EMH0221A22010689        device
+   ```
+
+   > 也可以打开Android Studio查看设备管理器中是否识别到当前连接的设备。
+
+##### 从Android设备上访问开发服务器：
 
 在启用开发服务器的情况下，你可以快速的迭代修改应用，然后在设备上立即查看结果。有2种方式可以实现，取决于你是否有 USB 数据线或 Wi-Fi 网络。
 
@@ -47,7 +90,7 @@
    在命令行中运行：
 
    ```shell
-   adb -s <device name> reverse tcp:8081 tcp:8081
+   adb -s 设备ID reverse tcp:8081 tcp:8081
    ```
 
    要查找设备名称，运行以下 adb 命令：
@@ -79,6 +122,8 @@
 #### 在 iOS 设备上运行应用
 
 xxx
+
+------
 
 ### React Native中使用第三方库
 
@@ -121,6 +166,8 @@ React Native 使用 Gradle 来管理 Android 项目的依赖关系。在安装�
 ```shell
 npm run android
 ```
+
+------
 
 ### Metro
 
@@ -292,4 +339,6 @@ module.exports = function (baseConfig) {
      ]
    }
    ```
+
+------
 

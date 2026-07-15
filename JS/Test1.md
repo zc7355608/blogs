@@ -638,7 +638,7 @@ JavaScript 语言有多个版本。本书的内容主要基于 ECMAScript 5.1 �
       
         > 全局对象（`global/windows`）上也有同名函数 `isNaN()`，它会先把任意值先转成数字、再判断，所以 `isNaN("abc")` 会返回 `true`（因为 "abc" 转数字后是 NaN），这很有误导性不推荐使用。而 `Number.isNaN()` 只在值**本身是 NaN 且类型为 number** 时才返回 `true`，判断更严格可靠。
       
-      - （ES6）`Number.isFinite(v)`：检查一个数值是否为有限的（finite），即不是`Infinity`。注意，如果参数类型不是数值，`Number.isFinite`一律返回`false`。
+      - （ES6）`Number.isFinite(v)`：判断传入值是否是一个有限数——也就是说，它检查给定值是一个数字，且该数字不为`+/-Infinity`，且非`NaN`。注意，如果参数类型不是数值，`Number.isFinite`一律返回`false`。
       
         > 全局对象（`global/windows`）上也有同名函数 `isFinite()`，逻辑同上，也会先转换类型再判断，导致 `isFinite("123")` 返回 `true`，所以不推荐使用。`Number.isFinite()` 则要求值本身必须是数字且是有限的。
 
