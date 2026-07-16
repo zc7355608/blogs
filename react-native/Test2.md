@@ -141,7 +141,15 @@ React Native 第三方库都保存在 npm 中心仓中，要在你的项目中�
 
 > 通常为其他平台特别构建的库与 React Native 不兼容。例如，`react-select`是为 Web 构建的，专门针对`react-dom`，而`rimraf`是为 Node.js 构建的，并与计算机文件系统交互。像`lodash`这样的库仅使用 JavaScript 语言特性，在任何环境中都可以工作。随着时间的推移你将对此有所了解，但在那之前，最简单的方法是自己尝试。如果发现它在 React Native 中不起作用，你可以使用`npm uninstall`来移除包。
 
-因为不同平台使用的包管理工具不同，因此npm安装了第三方库后，通常需要将其中的内容与原生代码进行链接。
+因为不同平台使用的包管理工具不同，因此npm**安装了第三方库后，通常还需要将其中的内容与原生代码进行链接**。
+
+#### 链接 Android 原生代码
+
+React Native 使用 Gradle 来管理 Android 项目的依赖关系。在安装了带有原生依赖项的库之后，你需要重新构建应用程序二进制文件才能使用新库：
+
+```shell
+npm run android
+```
 
 #### 链接 iOS 原生代码
 
@@ -159,28 +167,31 @@ npx pod-install
 npm run ios
 ```
 
-#### 链接 Android 原生代码
-
-React Native 使用 Gradle 来管理 Android 项目的依赖关系。在安装了带有原生依赖项的库之后，你需要重新构建应用程序二进制文件才能使用新库：
-
-```shell
-npm run android
-```
-
 ------
 
 ### Metro
 
 React Native 使用 [Metro](https://metrobundler.dev/) 来构建你的 JS 代码和资源。
 
-Metro 的配置选项可在您的项目中进行自定义`metro.config.js`文件。它可以导出以下两种格式之一:
+> 💡 Web 前端开发者类比：
+> 简单来说，Metro 就相当于 React Native 生态中的 Webpack 或 Vite。它是一个专为 React Native 端到端设计的 JavaScript 打包工具，负责解析依赖、转换代码（如 TSX/JSX）并输出设备可执行的 Bundle。
 
-- 一个对象，它将被合并到Metro的内部配置默认值之上。（推荐）
-- 一个函数，它将被调用，并与Metro的内部配置默认值，合并后返回一个最终的配置对象。
+##### 配置Metro：
 
-在 React Native 中，您的 Metro 配置应同时继承[`@react-native/metro-config`](https://www.npmjs.com/package/@react-native/metro-config)或[`@expo/metro-config`](https://www.npmjs.com/package/@expo/metro-config)。这些包包含构建和运行 React Native 应用程序所必需的必要默认值。
+你可以在项目根目录的 `metro.config.js` 文件中自定义 Metro 的配置选项。该文件可以导出以下2种形式之一：
 
-以下是默认值`metro.config.js`React Native 模板项目中的文件：
+- 一个对象（官方推荐）：该对象将会与 Metro 内部的默认配置进行安全合并（Merge）。
+- 一个函数：该函数会接收 Metro 的内部默认配置作为参数，并需要你返回一个对象作为最终的配置对象。
+
+> 💡 提示：
+> 关于所有可用配置选项的完整文档，请参阅 [Metro 官方网站的配置文档](https://metrobundler.dev/docs/configuration)。
+
+在 React Native 中，你的 Metro 配置应该继承（extend）[`@react-native/metro-config`](https://www.npmjs.com/package/@react-native/metro-config)或[`@expo/metro-config`](https://www.npmjs.com/package/@expo/metro-config)，它们包含了构建和运行 React Native 应用所必需的核心默认配置（例如处理 Hermes 引擎、特定平台扩展名等）。
+
+> 💡 Web 前端开发者类比：
+> 这就像在 Webpack 中使用 webpack-merge 来继承 webpack.base.conf.js，而不是从零开始手写所有 loader 和 plugin 规则。
+
+以下是 React Native 模板项目中默认的 `metro.config.js` 文件内容：
 
 ```js
 const {
@@ -199,13 +210,11 @@ const config = {};
 module.exports = mergeConfig(getDefaultConfig(__dirname), config);
 ```
 
-您希望自定义的Metro选项可以在`config`对象中完成。
+如果你希望自定义某些 Metro 选项，可以在 `config` 对象中进行设置。
 
-#### 高级——使用配置功能
+##### 进阶——使用函数方式进行配置：
 
-**导出配置功能是自行管理最终配置的选项——Metro** 不会应用任何内部默认值。此模式在需要从 Metro 读取基础默认配置对象或动态设置选项时可能非常有用。
-
-> **来自`@react-native/metro-config`0.72.1** 不再需要使用配置函数来访问完整的默认配置。**Tip**请参见下方的提示部分。
+导出一个配置函数意味着你选择自行管理最终的配置——在这种情况下，Metro 不会自动应用任何内部默认值。这种模式在需要读取 Metro 的基础默认配置对象，或需要根据环境变量动态设置选项时非常有用。
 
 ```js
 const {
@@ -231,9 +240,12 @@ module.exports = function (baseConfig) {
 };
 ```
 
-> 使用配置功能适用于高级用例。比上述方法更简单,例如用于自定义`sourceExts`将从以下步骤中读取这些默认值`@react-native/metro-config`。
+ℹ️ 注意：
+从 `@react-native/metro-config` 0.72.1 版本开始，你不再需要使用配置函数来访问完整的默认配置。请参阅下方的“提示”部分。
+
+> 💡 提示：
 >
-> **替代方案**
+> 使用配置函数属于进阶用法。对于像自定义 sourceExts 这样的简单需求，更简单的方法是直接从 `@react-native/metro-config` 中读取这些默认值：
 >
 > ```js
 > const defaultConfig = getDefaultConfig(__dirname);
@@ -247,9 +259,9 @@ module.exports = function (baseConfig) {
 > module.exports = mergeConfig(defaultConfig, config);
 > ```
 >
-> **However!**但是!我们建议在覆盖这些配置值时进行复制和编辑——将真相的来源置于您的配置文件中。
+> 但是！官方建议在覆盖这些配置值时，直接**复制并硬编码**它们，将“单一事实来源（Source of Truth）”明确保留在你的配置文件中。
 >
-> ✅ **推荐**
+> ✅ 推荐做法：
 >
 > ```js
 > const config = {
@@ -258,14 +270,25 @@ module.exports = function (baseConfig) {
 >   },
 > };
 > ```
+>
+> 💡 Web 前端开发者类比：
+> 这就像在配置 `tailwind.config.js` 或 `vite.config.ts` 时，直接明确写出你需要的 `content` 或 `resolve.extensions`，而不是通过复杂的函数去动态 push，这样代码的可读性和可维护性更高。
 
-### 使用TS
+------
 
-由 [React Native CLI](https://reactnative.cn/docs/getting-started-without-a-framework#step-1-creating-a-new-application) 创建的新项目或使用 [Ignite](https://infinite.red/ignite) 等流行模板将默认使用 TypeScript，同时也支持 JS 和 Flow，无需额外配置。和非 TypeScript 的 React Native 项目一样都是直接通过 [Babel](https://reactnative.cn/docs/javascript-environment#javascript-syntax-transformers) 将您的文件转换为 JavaScript。
+### 使用TypeScript
+
+由 [React Native CLI](https://reactnative.cn/docs/getting-started-without-a-framework#step-1-creating-a-new-application) 创建的新项目或使用 [Ignite](https://infinite.red/ignite) 等流行模板将默认使用 TypeScript，同时也支持 JS 和 Flow，无需额外配置。和非 TypeScript 的 React Native 项目一样，都是直接通过 [Babel](https://reactnative.cn/docs/javascript-environment#javascript-syntax-transformers) 将您的文件转换为 JavaScript。
 
 具有 `.jsx` 或 `.js` 扩展名的文件将被视为 JavaScript 而非 TypeScript，并且不会进行类型检查。TypeScript 模块仍可导入 JavaScript 模块，反之亦然。
 
-##### 在已有项目中添加TS：
+> TypeScript 也可以与 [Expo](https://expo.io) 一起使用，Expo 维护 TypeScript 模板，或者当向项目添加 `.ts` 或 `.tsx` 文件时，Expo 将提示您自动安装和配置 TypeScript。
+>
+> ```shell
+> npx create-expo-app --template
+> ```
+
+##### 为已有项目添加TypeScript支持：
 
 1. 将 TypeScript，类型文件，以及 ESLint 插件等依赖添加到项目中。
 
@@ -285,17 +308,19 @@ module.exports = function (baseConfig) {
 
 3. 将 `.js` 文件重命名为`* .tsx`。
 
-   > 请保留`./index.js`入口文件，否则可能将在打包生产版本时遇到问题。
+   > 注意：请保留`./index.js`入口文件，否则可能将在打包生产版本时遇到问题。
 
-4. 运行 `tsc` 对 TS 文件进行类型检查。
+4. 运行 `tsc` 对 TS 文件进行类型检查：
 
    ```shell
    npx tsc
    ```
+   
+   > 建议只使用 TypeScript 编译器`tsc`的类型检查功能（而不是编译）。因为RN项目的编译和代码转换是由Metro来做的，开发人员通常不应该干预这个编译过程。
 
-##### 在TS中使用自定义路径别名：
+##### 在TypeScript中使用自定义路径别名：
 
-要使用 TypeScript 的自定义路径别名，需要设置从 Babel 和 TypeScript 操作的路径别名。具体方法如下：
+要在 TypeScript 中使用自定义路径别名，你需要配置这些别名，使其在 Babel 和 TypeScript 中均能生效。具体操作如下
 
 1. 编辑`tsconfig.json`。在根目录中设置任何内容`src`无需前面的路径引用，并允许使用任何测试文件进行访问`tests/File.tsx`：
 
