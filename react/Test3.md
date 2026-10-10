@@ -30,7 +30,7 @@
 
   为了在 props 和 state 相同时跳过重新渲染，类式组件应该继承 `PureComponent` 而不是 `Component`。
 
-  `PureComponent` 是 `Component` 的子类，并且支持 [所有 `Component` 的 API](https://zh-hans.react.dev/reference/react/Component#reference)。继承 `PureComponent` 的子类相当与定义了一个自定义的 [`shouldComponentUpdate`](https://zh-hans.react.dev/reference/react/Component#shouldcomponentupdate) 方法，该方法将浅比较 props 和 state。
+  `PureComponent` 是 `Component` 的子类，并且支持 [所有 `Component` 的 API](https://zh-hans.react.dev/reference/react/Component#reference)。继承 `PureComponent` 的子类相当与定义了一个自定义的 [`shouldComponentUpdate`](https://zh-hans.react.dev/reference/react/Component#shouldcomponentupdate) 方法，该方法将浅比较 props 和 state。因此继承了 `PureComponent` 的类组件中，最好不要同时定义`shouldComponentUpdate()`方法，这样会覆盖掉父类中的方法，导致低效渲染的问题仍然存在。
 
   > React 仍然支持类式组件，但我们不建议在新代码中使用。
 
@@ -177,8 +177,10 @@
 
     ##### 参数：
 
-    - `setup`：处理 Effect 的函数。setup 函数选择性返回一个 **清理（cleanup）** 函数。setup 函数相当于`componentDidmount()`和`componentDidUpdate()`的结合体。cleanup 函数（如果你提供了该函数）会在组件重新渲染时，setup 函数执行之前，先执行 setup 函数完成清理工作。并且在组件从 DOM 中移除后，React 将最后一次运行 cleanup 函数（相当于`componentWillUnmount()`）。
+    - `setup`：它是一个处理 Effect 副作用的函数，相当于`componentDidmount()`和`componentDidUpdate()`的结合体。
 
+      setup 函数可以选择性地返回一个 **cleanup 清理** 函数。cleanup 函数（如果你提供了该函数）会在组件重新渲染时，setup 函数执行之前，先执行 setup 函数完成清理工作。并且在组件从 DOM 中移除后，React 将最后一次运行 cleanup 函数（相当于`componentWillUnmount()`）。
+    
       ```tex
       首次挂载
       ↓
@@ -200,7 +202,7 @@
       如果只想让setup在首次渲染时执行，那么依赖项应该指定为空数组`[]`。
 
     ##### 返回值：
-
+    
     `useEffect` 返回 `undefined`。
 
 - ### 使用 Context 深层传递参数
@@ -330,7 +332,7 @@
 
   错误边界的特点：只能捕获后代组件函数中的同步错误、Hook函数的错误，不能捕获其他组件的合成事件的错误，以及异步的错误。
 
-  > 对应类组件声明周期钩子中的错误、以及`render()`方法中的错误。
+  > 对应类组件生命周期钩子中的错误、以及`render()`方法中的错误。
 
   ##### 什么情况下使用错误边界？
 

@@ -138,7 +138,7 @@
     1. 布局消息传递； 将虚拟 DOM 布局信息传递给原生；
     2. 原生根据布局信息，通过对应的原生控件渲染；
 
-    至此，React Native 便实现了跨平台。 相对于混合应用，由于React Native是 原生控件渲染，所以性能会比混合应用中 H5 好一些，同时  React Native 提供了很多原生组件对应的 Web 组件，大多数情况下开发者只需要使用 Web 技术栈 就能开发出  App。我们可以发现，这样也就做到了维护一份代码，便可以跨平台了。
+    至此，React Native 便实现了跨平台。 相对于混合应用，由于React Native是原生控件渲染，所以性能会比混合应用中 H5 好一些，同时  React Native 提供了很多原生组件对应的 Web 组件，大多数情况下开发者只需要使用 Web 技术栈 就能开发出  App。我们可以发现，这样也就做到了维护一份代码，便可以跨平台了。
 
   - ##### Weex：
 
@@ -225,7 +225,7 @@ React Native 是一个使用 React 和应用平台的原生功能来构建 Andro
 
 在 Android 和 iOS 开发中，一个**视图（view）**是 UI 的基本组成部分：屏幕上的一个小矩形元素、可用于显示文本、图像或响应用户输入。甚至应用程序最小的视觉元素（例如一行文本或一个按钮）也都是各种视图。某些类型的视图可以包含其他视图。全部都是视图。
 
-在 Android 开发中是使用 Kotlin 或 Java 来编写视图；在 iOS 开发中是使用 Swift 或 Objective-C 来编写视图。在 React Native 中，则使用 React 组件通过 JS 来调用这些视图。在运行时，React  Native 为这些组件创建相应的 Android 和 iOS 视图。由于 **React Native 组件就是对原生视图的封装**，因此使用  React Native 编写的应用外观、感觉和性能与其他任何原生应用一样。我们将这些平台支持的组件称为**原生组件**。
+在 Android 开发中是使用 Kotlin 或 Java 来编写视图；在 iOS 开发中是使用 Swift 或 Objective-C 来编写视图。在 React Native 中，则使用 React 组件、通过 JS 来调用这些视图。在运行时，React  Native 为这些组件创建相应的 Android 和 iOS 视图。由于 **React Native 组件就是对原生视图的封装**，因此使用  React Native 编写的应用外观、感觉和性能与其他任何原生应用一样。我们将这些平台支持的组件称为**原生组件**。
 
 > React Native 允许您为 Android 和 iOS 构建自己的 Native Components（原生组件），以满足您开发应用程序的独特需求。我们还有一个由社区贡献的繁荣生态系统，您可以到[Native Directory](https://reactnative.directory/)来查找社区已创建的内容。（不理解的话先忽略这句话）
 
@@ -233,168 +233,51 @@ React Native 包括一组基础的、随时可用的原生组件，您可以使�
 
 React Native 具有许多核心组件，从表单控件到活动指示器，应有尽有。例如：
 
-| React Native UI 组件 | Android 原生视图 | iOS 原生视图     | Web 标签                | 说明                                                         |
-| -------------------- | ---------------- | ---------------- | ----------------------- | ------------------------------------------------------------ |
-| `<View>`             | `<ViewGroup>`    | `<UIView>`       | A non-scrolling `<div>` | 一个支持使用flexbox布局、样式、一些触摸处理和无障碍性控件的容器 |
-| `<Text>`             | `<TextView>`     | `<UITextView>`   | `<p>`                   | 显示、样式和嵌套文本字符串，甚至处理触摸事件                 |
-| `<Image>`            | `<ImageView>`    | `<UIImageView>`  | `<img>`                 | 显示不同类型的图片                                           |
-| `<ScrollView>`       | `<ScrollView>`   | `<UIScrollView>` | `<div>`                 | 一个通用的滚动容器，可以包含多个组件和视图                   |
-| `<TextInput>`        | `<EditText>`     | `<UITextField>`  | `<input type="text">`   | 使用户可以输入文本                                           |
+| React Native UI 组件 | Android 原生视图 | iOS 原生视图     | Web 标签              | 说明                                                         |
+| -------------------- | ---------------- | ---------------- | --------------------- | ------------------------------------------------------------ |
+| `<View>`             | `<ViewGroup>`    | `<UIView>`       | 一个非滚动的 `<div>`  | 一个支持使用flexbox布局、样式、一些触摸处理和无障碍性控件的容器 |
+| `<Text>`             | `<TextView>`     | `<UITextView>`   | `<p>`                 | 显示、样式和嵌套文本字符串，甚至处理触摸事件                 |
+| `<Image>`            | `<ImageView>`    | `<UIImageView>`  | `<img>`               | 显示不同类型的图片                                           |
+| `<ScrollView>`       | `<ScrollView>`   | `<UIScrollView>` | `<div>`               | 一个通用的滚动容器，可以包含多个组件和视图                   |
+| `<TextInput>`        | `<EditText>`     | `<UITextField>`  | `<input type="text">` | 使用户可以输入文本                                           |
 
 *另外有些内置组件的某些属性可能只在特定平台上有效。请在阅读文档时留意*。
 
 > HelloWorld 程序：
 >
-> ```jsx
-> import { View, Text, Image, ScrollView, TextInput } from 'react-native';
-> 
-> const App = () => {
->   return (
->       <ScrollView>
->          <Text>Some text</Text>
->          <View>
->            <Text>Some more text</Text>
->            <Image
->              source={{
->                uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
->              }}
->              style={{ width: 200, height: 200 }}
->            />
->          </View>
->          <TextInput
->            style={{
->              height: 40,
->              borderColor: 'gray',
->              borderWidth: 1
->            }}
->            defaultValue="You can type in me"
->          />
->        </ScrollView>
->      );
->   }
-> 
-> export default App;
-> ```
+
+```jsx
+import { View, Text, Image, ScrollView, TextInput } from 'react-native';
+
+const App = () => {
+return (
+   <ScrollView>
+      <Text>Some text</Text>
+      <View>
+        <Text>Some more text</Text>
+        <Image
+          source={{
+            uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
+          }}
+          style={{ width: 200, height: 200 }}
+        />
+      </View>
+      <TextInput
+        style={{
+          height: 40,
+          borderColor: 'gray',
+          borderWidth: 1
+        }}
+        defaultValue="You can type in me"
+      />
+    </ScrollView>
+  );
+}
+
+export default App;
+```
 
 如果你熟悉 web 开发，`<View>`和`<Text>`应该能让你想起 HTML。你可以把它们看作是应用开发中的`<div>`和`<p>`标签。
-
-- `<TextInput>`：`TextInput`是一个允许用户输入文本的**基础组件**。它有一个`onChangeText`属性，此属性接受一个函数，并会在文本每次发生变化时调用。它还有一个`onSubmitEditing`属性，此属性接受一个函数，并会在文本被提交时调用。
-
-- `<ScrollView>`：`ScrollView`是一个通用的可滚动的容器，你可以在其中放入多个组件和视图，而且这些组件并不需要是同类型的。ScrollView 不仅可以垂直滚动，还能水平滚动（通过`horizontal`属性来设置）。
-
-  ScrollViews 可以通过使用`pagingEnabled`属性来允许使用滑动手势对视图进行分页，在 Android 上也可以利用[ViewPager](https://github.com/react-native-community/react-native-viewpager)组件水平滑动视图。
-
-  在 iOS 上包含单个子元素的 ScrollViews 可以允许用户对内容进行缩放. 通过设置`maximumZoomScale`和`minimumZoomScale`两者的属性, 您的用户能够利用捏合以及扩大手势来放大或缩小。
-
-  **`ScrollView`适合用来显示数量不多的滚动元素**。放置在`ScrollView`中的所有组件都会被渲染，哪怕有些组件因为内容太长被挤出了屏幕外。如果你需要显示较长的滚动列表，那么应该使用功能差不多但**性能更好的`FlatList`组件**。下面我们来看看[如何使用长列表](https://reactnative.cn/docs/using-a-listview)。
-
-React Native 提供了几个适用于展示长列表数据的组件，一般而言我们会选用`<FlatList>`或`<SectionList>`。
-
-- `<FlatList>`/`<SectionList>`：用于**显示一个垂直的滚动列表，其中的元素之间结构近似而仅数据不同**。
-
-  **`FlatList`更适于长列表数据，且元素个数可以增删**。和[`ScrollView`](https://reactnative.cn/docs/using-a-scrollview)不同的是，`FlatList`并不立即渲染所有元素，而是**优先渲染屏幕上可见的元素**。
-
-  `FlatList`组件必须的两个属性是`data`和`renderItem`。`data`是列表的数据源，而`renderItem`则从数据源中逐个解析数据，然后返回一个设定好格式的组件来渲染。
-
-  下面的例子创建了一个简单的`FlatList`，并预设了一些模拟数据。首先是初始化`FlatList`所需的`data`，其中的每一项（行）数据之后都在`renderItem`中被渲染成了`Text`组件，最后构成整个`FlatList`。
-
-  ```jsx
-  import {FlatList, StyleSheet, Text, View} from 'react-native';
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingTop: 22,
-    },
-    item: {
-      padding: 10,
-      fontSize: 18,
-      height: 44,
-    },
-  });
-  
-  const FlatListBasics = () => {
-    return (
-      <View style={styles.container}>
-        <FlatList
-          data={[
-            {key: 'Devin'},
-            {key: 'Dan'},
-            {key: 'Dominic'},
-            {key: 'Jackson'},
-            {key: 'James'},
-            {key: 'Joel'},
-            {key: 'John'},
-            {key: 'Jillian'},
-            {key: 'Jimmy'},
-            {key: 'Julie'},
-          ]}
-          renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
-        />
-      </View>
-    );
-  };
-  
-  export default FlatListBasics;
-  ```
-
-  `<SectionList>`：如果要渲染的是一组需要分组的数据，也许还带有分组标签的，那么`SectionList`将是个不错的选择。
-
-  ```jsx
-  import {SectionList, StyleSheet, Text, View} from 'react-native';
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingTop: 22,
-    },
-    sectionHeader: {
-      paddingTop: 2,
-      paddingLeft: 10,
-      paddingRight: 10,
-      paddingBottom: 2,
-      fontSize: 14,
-      fontWeight: 'bold',
-      backgroundColor: 'rgba(247,247,247,1.0)',
-    },
-    item: {
-      padding: 10,
-      fontSize: 18,
-      height: 44,
-    },
-  });
-  
-  const SectionListBasics = () => {
-    return (
-      <View style={styles.container}>
-        <SectionList
-          sections={[
-            {title: 'D', data: ['Devin', 'Dan', 'Dominic']},
-            {
-              title: 'J',
-              data: [
-                'Jackson',
-                'James',
-                'Jillian',
-                'Jimmy',
-                'Joel',
-                'John',
-                'Julie',
-              ],
-            },
-          ]}
-          renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
-          renderSectionHeader={({section}) => (
-            <Text style={styles.sectionHeader}>{section.title}</Text>
-          )}
-          keyExtractor={item => `basicListEntry-${item}`}
-        />
-      </View>
-    );
-  };
-  
-  export default SectionListBasics;
-  ```
 
 ### 特定平台编码
 
@@ -416,7 +299,7 @@ React Native 提供了两种方法来区分平台：
 
   `Platform.OS`在 iOS 上会返回`'ios'`，而在 Android 设备或模拟器上则会返回`'android'`。
 
-  还有个实用的方法是 `Platform.select()`，它可以以 `Platform.OS` 为 key，从传入的对象中返回对应平台的值：
+  还有个实用的方法是 `Platform.select()`，它以 `Platform.OS` 为 key，从传入的对象中返回对应平台的值：
 
   ```jsx
   import {Platform, StyleSheet} from 'react-native';
@@ -558,11 +441,11 @@ npx create-expo-app@latest MyTestApp
 
 > 搭建开发环境可以参考RN官网（https://reactnative.dev/docs/set-up-your-environment），笔记中的安装方式可能不是最新的。
 
-如果你使用的是Windows系统，那么只能安装Android的开发环境；如果是Mac系统，则可以安装Android和iOS开发环境。
+*如果你使用的是Windows系统，那么只能安装Android的开发环境；如果是Mac系统，则可以安装Android和iOS开发环境。*
 
 #### 搭建安卓开发环境
 
-你需要安装：React Native CLI、Node、JDK 和 Android Studio。
+你需要安装：Node、JDK 和 Android Studio。
 
 虽然你可以使用`任何编辑器`来开发应用（比如使用VSCode来编写 js 代码），但你仍然必须安装 Android Studio 来获得编译 Android 应用所需的工具和环境。
 
@@ -687,9 +570,11 @@ xxx
 
 #### 使用CLI创建一个新的React Native项目
 
+> 如果你正在将React Native集成到现有应用程序中，或者您已经在项目中安装了Expo，或者您正在将Android支持添加到现有React  Native项目中，则不需要这样做（请参阅[与现有应用程序集成](https://reactnative.dev/docs/integration-with-existing-apps)）。
+
 目标环境准备好之后，我们通过CLI来创建RN项目。
 
-使用 React Native 内建的命令行工具来创建一个名为"AwesomeProject"的新项目。这个命令行工具不需要安装，可以直接用 node 自带的`npx`命令来使用：
+使用 React Native 内建的命令行工具来创建一个名为"AwesomeProject"的新项目。这个命令行工具不需要安装，可以直接用 node 自带的`npx`命令来使用：（你也可以使用第三方CLI来设置你的React Native应用，比如 [Ignite CLI](https://github.com/infinitered/ignite)）
 
 ```shell
 npx @react-native-community/cli@latest init AwesomeProject
@@ -700,8 +585,6 @@ npx @react-native-community/cli@latest init AwesomeProject
 > ```shell
 > npm uninstall -g react-native-cli @react-native-community/cli
 > ```
-
-如果你正在将React Native集成到现有应用程序中，或者您已经在项目中安装了Expo，或者您正在将Android支持添加到现有React  Native项目中，则不需要这样做（请参阅[与现有应用程序集成](https://reactnative.dev/docs/integration-with-existing-apps)）。你也可以使用第三方CLI来设置你的React Native应用，比如 [Ignite CLI](https://github.com/infinitered/ignite)。
 
 如果你想用特定的React Native版本启动一个新项目，你可以使用`--version`参数：（注意版本号必须精确到两个小数点）
 
@@ -719,12 +602,6 @@ npx @react-native-community/cli@X.XX.X init AwesomeProject --version X.XX.X
 npm run android
 ```
 
-此命令会对项目的原生部分进行编译，同时在另外一个命令行中启动`Metro`服务对 js 代码进行实时打包处理（类似 webpack）。`Metro`服务也可以使用`npm start`命令单独启动。
-
-如果配置没有问题，你应该可以看到应用自动安装到设备上并开始运行。注意第一次运行时需要下载大量编译依赖，耗时可能数十分钟。此过程**严重依赖稳定的代理软件**，否则将频繁遭遇链接超时和断开，导致无法运行。
-
-`npx react-native run-android`只是运行应用的方式之一。你也可以在 Android Studio 中直接运行应用。
-
 作用：
 
 - 调用 Gradle 编译 Android 工程
@@ -735,9 +612,13 @@ npm run android
 
 该脚本**不负责实时打包 JS**。打包工作是Metro做的。
 
-如果一切设置正确，您应该很快就会看到新应用在Android模拟器中运行。
+> 此命令会对项目的原生部分进行编译，同时它会自动启动另外一个命令行，在里面启动`Metro`服务对 js 代码进行实时打包处理（类似 webpack）。（`Metro`服务也可以使用`npm start`命令单独启动）
+
+如果配置没有问题，你应该可以看到应用自动安装到设备上并开始运行。（注意：第一次运行时需要下载大量编译依赖，耗时可能数十分钟。此过程**严重依赖稳定的代理软件**，否则将频繁遭遇链接超时和断开，导致无法运行）
 
 ![image-20260711143901923](./assets/image-20260711143901923.png)
+
+*`npm run android`只是运行应用的方式之一。你也可以在 Android Studio 中直接运行应用。*
 
 #### 关于`Metro`
 

@@ -125,50 +125,6 @@ xxx
 
 ------
 
-### React Native中使用第三方库
-
-React Native 第三方库都保存在 npm 中心仓中，要在你的项目中安装一个RN的库，直接`npm install 包名`即可。
-
-[React Native 目录](https://reactnative.directory)中收录了专门为 React Native 构建的第三方库。这是寻找适用于你的 React Native 应用的库的第一站。
-
-> 你在目录中找到的许多库来自 [React Native 社区](https://github.com/react-native-community/) 或者 [Expo](https://docs.expo.dev/versions/latest/)。
->
-> 由 React Native 社区构建的库是由志愿者和依赖 React Native 的公司的个人推动的。它们通常支持  iOS、tvOS、Android、Windows，但这在各个项目之间有所不同。这个组织中的许多库曾经是 React Native 的核心组件和  API。
->
-> 由 Expo 构建的库都用 TypeScript 编写，并尽可能支持 iOS、Android 和 `react-native-web`。
-
-如果在 **React Native 目录**找不到专门针对 React Native 的库，那么 npm 中心仓库是下一个最佳选择。npm 中心仓是 JS 库的权威来源，但它列出的库可能并非都与 React Native 兼容。React  Native 是众多 JS 运行环境之一，类似 Node.js、Web 浏览器、Electron 等，而 npm  中存放了适用于所有这些环境的库。
-
-> 通常为其他平台特别构建的库与 React Native 不兼容。例如，`react-select`是为 Web 构建的，专门针对`react-dom`，而`rimraf`是为 Node.js 构建的，并与计算机文件系统交互。像`lodash`这样的库仅使用 JavaScript 语言特性，在任何环境中都可以工作。随着时间的推移你将对此有所了解，但在那之前，最简单的方法是自己尝试。如果发现它在 React Native 中不起作用，你可以使用`npm uninstall`来移除包。
-
-因为不同平台使用的包管理工具不同，因此npm**安装了第三方库后，通常还需要将其中的内容与原生代码进行链接**。
-
-#### 链接 Android 原生代码
-
-React Native 使用 Gradle 来管理 Android 项目的依赖关系。在安装了带有原生依赖项的库之后，你需要重新构建应用程序二进制文件才能使用新库：
-
-```shell
-npm run android
-```
-
-#### 链接 iOS 原生代码
-
-React Native 使用 CocoaPods 来管理 iOS 项目的依赖项，大多数 React Native 库都遵循这个约定。如果你使用的库不是这样的，请参考它们的 README 获取额外的指导。在大多数情况下以下说明都适用。
-
-在 `ios` 目录下运行 `pod install` 将其链接到原生 iOS 项目。一个不需要切换到 `ios` 目录就可以做到这一点的快捷方式是运行 `npx pod-install`。
-
-```shell
-npx pod-install
-```
-
-完成后，重新构建应用程序以开始使用新库：
-
-```shell
-npm run ios
-```
-
-------
-
 ### Metro
 
 React Native 使用 [Metro](https://metrobundler.dev/) 来构建你的 JS 代码和资源。
