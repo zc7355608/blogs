@@ -1,10 +1,10 @@
 # Electron快速上手
 
-https://www.yuque.com/tianyu-coder/openshare/electron#dqi3I
+[语雀笔记地址](https://www.yuque.com/tianyu-coder/openshare/electron#M4Lmv)
 
 ## Electron是什么？
 
-[**Electron** ](https://www.electronjs.org/zh/)是一个**跨平台桌面应用**开发框架，开发者可以使用：HTML、CSS、JavaScript 等 Web 技术来构建跨平台的桌面应用程序（Windows/MacOS/Linux），它的本质是结合了 **Chromium** 和 **Node.js**，现在广泛用于桌面应用程序开发，例如这些桌面应用都用到了Electron：VSCode、GitHubDesktop、1Password、QQ桌面版...
+[**Electron** ](https://www.electronjs.org/zh/)是一个**跨平台的桌面应用开发框架**，开发者可以使用HTML、CSS、JavaScript 等 Web 技术来构建跨平台的桌面应用程序（Windows/MacOS/Linux），它的本质是结合了 **Chromium** 和 **Node.js**，现在广泛用于桌面应用程序开发。例如这些桌面应用都用到了Electron：VSCode、GitHubDesktop、1Password、QQ桌面版...
 
 ## Electron 的优势
 
@@ -25,32 +25,36 @@ https://www.yuque.com/tianyu-coder/openshare/electron#dqi3I
 
   ![img](./assets/1719040124471-a00ccaa0-9082-489e-96fe-98761d15de2f.png)
 
-  Electron应用的核心就是围绕着主进程（Main），它就是一个跑在Nodejs环境中的js脚本。主进程是用来管理所有的渲染进程（Render）的，主进程和渲染进程之间通过IPC来进行双向通信。渲染进程之间要想通信，必须经过主进程。因此Electron是一个多进程的应用。
+  Electron应用的核心就是围绕着主进程（Main），它就是一个跑在Nodejs环境中的JS脚本。主进程主要用于管理所有的渲染进程。
   
-  主进程通过调用Electron提供的一套Native API可以对不同系统进行操作，一套代码就可以打包到不同环境上运行。
+  Electron应用的一个窗口就对应着一个渲染进程（Render），它里面运行着Chrome内核（Chromium），用来执行WEB中的HTML、CSS、JS代码。因此Electron是一个多进程的应用。
+  
+  **主进程和渲染进程之间通过IPC来进行双向通信**。渲染进程之间要想通信，也必须经过主进程。
+  
+  主进程通过调用Electron提供的一套原生API（Native API），来对不同的平台进行操作，一套代码就可以打包到不同桌面平台上运行。
 
 ## 搭建一个最基础的Electron工程
 
-1. 使用npm初始化一个node工程目录`npm init`，然后填写好`package.json`中的必要信息及启动命令。
+1. 执行`npm init`初始化一个Node工程，并填写好`package.json`中的必要信息及启动命令：
 
    ```json
    {
      "name": "test",
      "version": "1.0.0",
-     "main": "main.js", // electron项目的入口
+     "main": "main.js", // electron项目的入口，入口文件名不一定非得叫main
      "scripts": {
-       "start": "electron ." //start命令用于启动整个应用
+       "start": "electron ." // start命令用于启动整个应用
      },
-     "author": "tianyu", //为后续能顺利打包，此处要写明作者。
+     "author": "tianyu", // 为后续能顺利打包，此处要写明作者。
      "license": "ISC",
-     "description": "this is a electron demo", //为后续能顺利打包，此处要编写描述。
+     "description": "this is a electron demo", // 为后续能顺利打包，此处要编写描述。
    }
    ```
 
    有几条规则需要遵循：
 
    - *入口点* 应当是 `main.js`
-   - *author*、*license* 和 *description* 可以填任何值，但是不能为空，它们对于稍后的打包步骤是*必填*项。
+   - *author*、*license* 和 *description* 可以填任何值，但是不能为空，它们对于稍后的打包步骤是*必须的*。
 
 2. 安装`electron`作为开发依赖：`npm i electron -D`
 
@@ -58,72 +62,95 @@ https://www.yuque.com/tianyu-coder/openshare/electron#dqi3I
    >
    > 您的应用需要运行 Electron API，因此这听上去可能有点反直觉。 在底层实现中，Electron 的 JavaScript API 绑定到了一个包含其实现的二进制文件上。 Electron 的打包步骤负责处理对这个二进制文件的捆绑工作，因此无需将它指定为生产依赖。
 
-3. 在`main.js`中编写代码，创建一个基本窗口。
+3. 新建`main.js`，将以下代码粘进去，它可以创建一个基本的窗口：
 
    ```js
    /* 
      main.js运行在应用的主进程上，无法访问Web相关API，主要负责：控制生命周期、显示界面、控制渲染进程等其他操作。
    */
-   const { app, BrowserWindow } = require('electron')
+   const { app, BrowserWindow } = require("electron"); // app就是这个electron应用的根对象，BrowserWindow就是应用窗口的构造器
    
    // 用于创建窗口
    function createWindow() {
      const win = new BrowserWindow({
        width: 800, // 窗口宽度
        height: 600, // 窗口高度
-       autoHideMenuBar: true, // 自动隐藏菜单栏
-       alwaysOnTop: true, // 置顶
+       autoHideMenuBar: true, // 自动隐藏默认的菜单栏
+       alwaysOnTop: true, // 让应用在桌面上置顶
        x: 0, // 窗口位置x坐标
-       y: 0 // 窗口位置y坐标
-     })
-     // 加载一个远程页面
-     win.loadURL('http://www.atguigu.com')
+       y: 0, // 窗口位置y坐标
+     });
+     // 窗口的内容来自一个远程页面
+     win.loadURL("http://www.atguigu.com");
    }
    
    // 当app准备好后，执行createWindow创建窗口
-   app.on('ready',()=>{
-     createWindow()
-   })
+   app.on("ready", () => {
+     createWindow();
+   });
    ```
 
    > 关于 BrowserWindow 的更多配置项，请参考：[BrowserWindow实例属性](https://www.electronjs.org/zh/docs/latest/api/browser-window)
 
-4. 启动应用：`npm start`，你应该看到如下页面。
+4. 启动应用：`npm start`，你应该看到如下页面：
 
-   todo
+   ![image-20261015000922950](./assets/image-20261015000922950.png)
 
 ## 加载本地页面
 
-1. 创建`pages/index.html`编写内容：
+1. 创建`pages/index.html&index.css`并编写内容：
 
    ```html
-   <!DOCTYPE html>
+   <!doctype html>
    <html>
      <head>
        <meta charset="UTF-8" />
-       <title>index</title>
+       <title>Demo</title>
+       <link rel="stylesheet" href="./index.css" />
      </head>
      <body>
-       <h1>你好啊！</h1>
+       <h1>Hello World!</h1>
      </body>
    </html>
    ```
 
-2. 修改`mian.js`加载本地页面：
+   ```css
+   h1 {
+     background-color: #f0f0f0;
+     color: orange;
+   }
+   ```
+
+2. 修改`mian.js`加载本地页面：（建议**使用绝对路径**，否则打包后可能会出现问题）
 
    ```js
    // 加载一个本地页面
-   win.loadFile('./pages/index.html')
+   win.loadFile(path.resolve(__dirname, "./pages/index.html"));
    ```
+
+   注意：只要修改了主进程`main.js`的代码，都需要重启应用。（直接X掉所有页面、或者在命令行Ctrl + C，都能够停止应用进程）
+
+   ![image-20261015000812057](./assets/image-20261015000812057.png)
 
 3. 配置CSP：
 
-   此时开发者工具会报出一个安全警告，需要修改`index.html`，配置 CSP(Content-Security-Policy)
+   其实Electron应用的每一个窗口都是一个浏览器页面，因此默认情况下，Ctrl + Shift + i就能打开控制台。此时打开控制台会看到一个安全警告：
+
+   ![image-20261015001307869](./assets/image-20261015001307869.png)
+
+   这是一个CSP的警告，每个网页中能加载哪些资源都是由这个策略来控制的。
+
+   我们可以修改`index.html`去配置 CSP(Content-Security-Policy)：
 
    ```html
-   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+   <meta
+     http-equiv="Content-Security-Policy"
+     content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+   />
    ```
-
+   
+   修改后F5刷新就能消除这个警告。（注意：渲染进程Render中的HTML/CSS/JS代码修改后，直接刷新页面即可，不需要重启应用）
+   
    > 上述配置的说明：
    >
    > 1. `default-src 'self'`：
@@ -142,24 +169,24 @@ https://www.yuque.com/tianyu-coder/openshare/electron#dqi3I
 
 ## 完善窗口行为
 
-Windows 和 Linux 平台窗口特点是：关闭所有窗口时退出应用。
+Windows 和 Linux 平台中应用的特点是：当一个应用所有的窗口都关闭后，应用自动退出。
 
 ```js
 // 当所有窗口都关闭时
 app.on('window-all-closed', () => {
-  // 如果所处平台不是mac(darwin)，则退出应用。
+  // 如果所处平台不是mac(darwin)，则退出应用
   if (process.platform !== 'darwin') app.quit()
 })
 ```
 
-mac 应用即使在没有任何窗口的情况下也会继续运行，并且在没有窗口可用的情况下激活应用时会打开新的窗口。
+mac 中的应用即使在没有任何窗口的情况下也会继续运行。并且在没有窗口可用的情况下，激活应用时会打开一个新的窗口。
 
 ```js
 // 当app准备好后，执行createWindow创建窗口
-app.on('ready',()=>{
+app.on('ready',() => {
   createWindow()
   // 当应用被激活时
-  app.on('activate', () => {
+  app.on('activate', () => { // 只有MacOS系统才有激活事件
     //如果当前应用没有窗口，则创建一个新的窗口
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
@@ -168,9 +195,11 @@ app.on('ready',()=>{
 
 ## 配置自动重启
 
+我们每一次改了`main.js`之后，都需要重启应用才行，特别麻烦。可以配置一个自动重启，通过`nodemon`工具：
+
 1. 安装 Nodemon：`npm i nodemon -D`
 
-2. 修改 package.json 命令：
+2. 修改 package.json 中的`start`命令：
 
    ```json
    "scripts": {
@@ -178,17 +207,21 @@ app.on('ready',()=>{
    },
    ```
 
-3. 配置 nodemon.json 规则：
+3. （可选）配置 nodemon.json 规则：
 
-   ```josn
+   默认情况下，修改了html/css等运行在渲染进程上的脚本，不会重启应用，如果我们需要重启的话，也可以进行配置。
+
+   我们可以通过`nodemon`的配置文件来控制具体监视哪些文件：
+
+   ```json
    {
      "ignore": [
        "node_modules",
        "dist"
-     ],
-     "restartable": "r",
-     "watch": ["*.*"],
-     "ext": "html,js,css"
+     ], // 忽略文件
+     "restartable": "r", // 一个短命令。通过在控制台输入这个短命令并回车，可以手动控制应用重启
+     "watch": ["*.*"], // 监视所有层级的文件
+     "ext": "html,js,css" // 包含哪些后缀名的文件
    }
    ```
 
@@ -204,11 +237,312 @@ Electron 应用的结构与上图非常相似，在 Electron 中主要控制两�
 
 - ### 主进程
 
-  每个 Electron 应用都有一个单一的主进程，作为应用程序的入口点。 主进程在 Node.js 环境中运行，它具有 require 模块和使用所有 Node.js API 的能力，主进程的核心就是：**使用 BrowserWindow 来创建和管理窗口。**
+  **每个 Electron 应用都有一个单一的主进程，作为应用程序的入口点**。 主进程在 Node.js 环境中运行，它具有 require 模块和使用所有 Node.js API 的能力，主进程的核心就是：**使用 BrowserWindow 来创建和管理窗口（渲染进程）。**
 
 - ### 渲染进程
 
-  每个 BrowserWindow 实例都对应一个单独的渲染器进程，运行在渲染器进程中的代码，必须遵守网页标准，这也就意味着：**渲染器进程无权直接访问 `require` 或使用任何Node.js的API**。
+  **每个 BrowserWindow 实例都对应一个单独的渲染器进程**，运行在渲染器进程中的代码，必须遵守网页标准，这也就意味着：**渲染器进程无权直接访问 `require` 或使用任何Node.js的API**。
 
-  > 问题产生：处于渲染器进程的用户界面，该怎样才与 **Node.js** 和 **Electron** 的原生桌面功能进行交互呢？
+问题产生：处于渲染器进程的用户界面，该怎样与 **Node.js** 以及 **Electron** 的原生桌面功能进行交互呢？
+
+## Preload 脚本
+
+**预加载（Preload）脚本是运行在渲染进程中的**， 但它是在**网页内容加载之前**执行的，这意味着它具有比普通渲染器代码更高的权限，**可以访问一部分 Node.js 的 API**，同时又可以与网页内容进行安全的交互。（执行顺序：`main.js -> preload.js -> index.html`）
+
+简单说：Preload预加载脚本是 **主进程** 和 **渲染进程** 之间的桥梁，它可以安全地将部分 **Node.js** 功能暴露给页面，从而减少安全风险。  
+
+##### 需求：点击按钮后，在页面呈现当前的 Node 版本。
+
+具体文件结构与编码如下：
+
+1. 根目录下创建预加载脚本`preload.js`，内容如下：
+
+   ```js
+   const { contextBridge } = require("electron"); // 它是预加载脚本和渲染进程之间的桥梁
+   
+   // 暴露数据给渲染进程
+   contextBridge.exposeInMainWorld("myAPI", {
+     n: 666,
+     version: process.version,
+   }); // 此时window.myAPI就能拿到暴露的这个对象数据
+   ```
+
+2. 在主进程`main.js`中引入`preload.js`：
+
+   ```js
+   const win = new BrowserWindow({
+     ...
+     webPreferences: {
+       preload: path.resolve(__dirname, "./preload.js"), // 这里必须是一个绝对路径
+     },
+     ...
+   });
+   ```
+
+3. 新建`pages/render.js`：
+
+   ```js
+   const btn = document.querySelector("#btn");
+   btn.addEventListener("click", () => {
+     console.log(myAPI.version);
+     document.body.innerHTML += `<h2>${myAPI.version}</h2>`;
+   });
+   ```
+
+4. 在`index.html`中引入`render.js`：
+
+   ```html
+   <body>
+     <h1>你好啊！</h1>
+     <button id="btn">显示当前Node的版本</button>
+     <script type="text/javascript" src="./render.js"></script>
+   </body>
+   ```
+
+5. 整体文件结构如下：
+
+   ![image](./assets/image.png)
+
+## 进程通信（IPC）
+
+值得注意的是，上文中的`preload.js`，无法使用全部`Node`的`API`，比如：不能使用`Node`中的`fs`模块，但主进程（`main.js`）是可以的，这时就需要**进程通信**了。简单说：要让`preload.js`通知`main.js`去调用`fs`模块去干活。
+
+关于`Electron`进程通信，我们要知道：
+
+`IPC` 全称为：`InterProcess Communication`，即：进程通信。
+
+`IPC`是`Electron`中最为核心的内容，它是从`UI`调用原生`API`的唯一方法！
+
+`Electron`中，主要使用 [**ipcMain**](https://www.electronjs.org/zh/docs/latest/api/ipc-main) 和 [**ipcRenderer**](https://www.electronjs.org/zh/docs/latest/api/ipc-renderer) 来定义“通道”，进行进程通信。
+
+- ### 渲染进程→主进程（单向）
+
+  概述：在**渲染器进程**中 [**ipcRenderer.send**](https://www.electronjs.org/zh/docs/latest/api/ipc-renderer) 发送消息，在**主进程**中使用 [**ipcMain.on**](https://www.electronjs.org/zh/docs/latest/api/ipc-main) 接收消息。
+
+  常用于：**在渲染进程中调用主进程中的 API**，例如下面的这个需求：
+
+  ##### 需求：点击按钮后，在用户的 D 盘创建一个`hello.txt`文件，文件内容来自于用户输入。
+
+  1. `index.html`中添加相关元素，`render.js`中添加对应脚本：
+
+     ```html
+     <input id="content" type="text"><br><br>
+     <button id="btn">在用户的C盘创建一个hello.txt</button>
+     ```
+
+     ```js
+     const btn = document.querySelector("#btn");
+     const content = document.querySelector("#content");
+     btn.addEventListener("click", () => {
+       console.log(content.value);
+       myAPI.saveFile(content.value);
+     });
+     ```
+
+  2. `preload.js`中使用`ipcRenderer.send('key',数据)`发送消息，与主进程通信。
+
+     ```js
+     const { contextBridge, ipcRenderer } = require("electron");
+     
+     contextBridge.exposeInMainWorld("myAPI", {
+       saveFile(str) {
+         // 渲染进程给主进程发送一个消息
+         ipcRenderer.send("create-file", str);
+       },
+     });
+     ```
+
+  3. 主进程中，在加载页面之前，使用`ipcMain.on('key',回调函数)`配置对应回调函数，接收消息。
+
+     ```js
+     const { app, BrowserWindow, ipcMain } = require("electron");
+     const path = require("path");
+     const fs = require("fs");
+     ...
+     
+     // 创建文件
+     function createFile(event, data) {
+       fs.writeFileSync("C:/hello.txt", data);
+     }
+     
+     // 用于创建窗口
+     function createWindow() {
+       ...
+       // 主进程注册对应回调
+       ipcMain.on("create-file", createFile);
+       // 加载一个本地页面
+       win.loadFile(path.resolve(__dirname, "./pages/index.html"));
+     }
+     ```
+
+- ### 主进程到→渲染进程（单向）
+
+  概述：**主进程**使用 **win.webContents.send** 发送消息，**渲染进程**通过 **ipcRenderer.on** 处理消息，
+
+  常用于：**从主进程主动发送消息给渲染进程**，例如下面的这个需求：
+
+  ##### 需求：应用加载 6 秒钟后，主动给渲染进程发送一个消息，内容是：你好啊！
+
+  1. 页面中添加相关元素，`render.js`中添加对应脚本：
+
+     ```js
+     window.onload = () => {
+       myAPI.getMessage(logMessage);
+     }
+     
+     function logMessage(event, str){
+       console.log(event, str);
+     }
+     ```
+
+  2. `preload.js`中使用`ipcRenderer.on('key',回调函数)`接收消息，并配置回调函数。
+
+     ```js
+     const { contextBridge, ipcRenderer } = require("electron");
+     
+     contextBridge.exposeInMainWorld("myAPI", {
+       ...
+       getMessage: (callback) => {
+         return ipcRenderer.on("message", callback);
+       }
+     })
+     ```
+
+  3. 主进程中，在合适的时候，使用`win.webContents.send('key',数据)`发送消息。
+
+     ```js
+     // 用于创建窗口
+     function createWindow() {
+       ...
+       // 加载一个本地页面
+       win.loadFile(path.resolve(__dirname, "./pages/index.html"));
+       // 创建一个定时器
+       setTimeout(() => {
+         win.webContents.send("message", "你好啊！");
+       }, 6000);
+     }
+     ```
+
+- ### 渲染进程↔主进程（双向）
+
+  概述：**渲染进程**通过[**ipcRenderer.invoke**](https://www.electronjs.org/zh/docs/latest/api/ipc-renderer#ipcrendererinvokechannel-args) 发送消息，**主进程**使用 [**ipcMain.handle**](https://www.electronjs.org/zh/docs/latest/api/ipc-main#ipcmainhandlechannel-listener) 接收并处理消息。
+
+  > 备注：`ipcRender.invoke` 的返回值是 `Promise` 实例。
+
+  常用于：**从渲染器进程调用主进程方法并等待结果**，例如下面的这个需求：
+
+  ##### 需求：点击按钮从 D 盘读取`hello.txt`中的内容，并将结果呈现在页面上。
+
+  1. `index.html`中添加相关元素，`render.js`中添加对应脚本：
+
+     ```html
+     <button id="btn">读取用户D盘的hello.txt</button>
+     ```
+
+     ```js
+     const btn = document.querySelector("#btn");
+     
+     btn.addEventListener("click", async () => {
+       const data = await myAPI.readFile("C:/hello.txt");
+       document.body.innerHTML += `<h2>${data}</h2>`;
+     });
+     ```
+
+  2. `preload.js`中使用`ipcRenderer.invoke('key',数据)`发送消息，与主进程通信。
+
+     ```js
+     const { contextBridge, ipcRenderer } = require("electron");
+     
+     contextBridge.exposeInMainWorld("myAPI", {
+     	...
+       readFile(fileName) {
+         return ipcRenderer.invoke("file-read", fileName); // invoke返回值是一个Promise对象
+       },
+     });
+     ```
+
+  3. 主进程中，在加载页面之前，使用`ipcMain.handle('key',回调函数)`接收消息，并配置回调函数。
+
+     ```js
+     // 读取文件
+     function readFile(event, fileName) {
+       return fs.readFileSync(fileName).toString();
+     }
+     
+     // 用于创建窗口
+     function createWindow() {
+       ...
+       // 主进程注册对应回调
+       ipcMain.handle("file-read", readFile);
+       // 加载一个本地页面
+       win.loadFile(path.resolve(__dirname,'./pages/index.html'))
+     }
+     ```
+
+## 打包应用
+
+使用 electron-builder  打包应用。注意：由于Electron将Chrome内核（Chromium）以及Nodejs都打包到了应用中，因此**Electron应用的体积比较大**。
+
+1. 安装 `electron-builder`：`npm install electron-builder -D`
+
+2. 在`package.json` 中新增`build`配置项，具体配置如下：
+
+   ```json
+   {
+     "name": "video-tools",  // 应用程序的名称
+     "version": "1.0.0",  // 应用程序的版本
+     "main": "main.js",  // 应用程序的入口文件
+     "scripts": {
+       "start": "electron .",  // 使用 `electron .` 命令启动应用程序
+       "build": "electron-builder"  // 使用 `electron-builder` 打包应用程序，生成安装包
+     },
+     "build": {
+       "appId": "com.atguigu.video",  // 应用程序的唯一标识符
+       // 打包windows平台安装包的具体配置
+       "win": {
+         "icon":"./logo.ico", //应用图标
+         "target": [
+           {
+             "target": "nsis",  // 指定使用 NSIS 作为安装程序格式
+             "arch": ["x64"]  // 生成 64 位安装包
+           }
+         ]
+       },
+       "nsis": {
+         "oneClick": false,  // 设置为 `false` 使安装程序显示安装向导界面，而不是一键安装
+         "perMachine": true,  // 允许每台机器安装一次，而不是每个用户都安装
+         "allowToChangeInstallationDirectory": true  // 允许用户在安装过程中选择安装目录
+       }
+     },
+     "devDependencies": {
+       "electron": "^30.0.0",  // 开发依赖中的 Electron 版本
+       "electron-builder": "^24.13.3"  // 开发依赖中的 `electron-builder` 版本
+     },
+     "author": "tianyu",  // 作者信息
+     "license": "ISC",  // 许可证信息
+     "description": "A video processing program based on Electron"  // 应用程序的描述
+   }
+   ```
+
+3. 执行打包命令：`npm run build`
+
+   ![image-20261017005353224](./assets/image-20261017005353224.png)
+
+## electron-vite
+
+![image-20261015223947403](./assets/image-20261015223947403.png)
+
+**electron-vite** 是一个新型构建工具，旨在为 [Electron](https://www.electronjs.org/) 提供更快、更精简的体验。主要由五部分组成：
+
+- 一套构建指令，它使用 [Vite](https://cn.vitejs.dev/) 打包你的代码，并且它能够处理 Electron 的独特环境，包括 [Node.js](https://nodejs.org/) 和浏览器环境。
+- 集中配置主进程、渲染器和预加载脚本的 Vite 配置，并针对 Electron 的独特环境进行预配置。
+- 为渲染器提供快速模块热替换（HMR）支持，为主进程和预加载脚本提供热重载支持，极大地提高了开发效率。
+- 优化 Electron 主进程资源处理。
+- 使用 V8 字节码保护源代码。
+
+electron-vite 快速、简单且功能强大，旨在开箱即用。
+
+**官网地址：**[**https://cn-evite.netlify.app/**](https://cn-evite.netlify.app/)
+
+------
 
